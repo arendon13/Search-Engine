@@ -19,8 +19,8 @@ test {
     testLogging.showStandardStreams = true
 }
 
-task quiz2(type: JavaExec) {
+task hello(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
-    main = 'edu.csula.cs460.app.Quiz2'
+    main = 'edu.csula.cs454.example.HelloWorld'
 }
