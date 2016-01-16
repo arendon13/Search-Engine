@@ -19,7 +19,7 @@ test {
     testLogging.showStandardStreams = true
 }
 
-task hello(type: JavaExec) {
+task hello(type: JavaE`xec) {
     classpath = sourceSets.main.runtimeClasspath
 
     main = 'edu.csula.cs454.example.HelloWorld'
