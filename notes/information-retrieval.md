@@ -54,6 +54,30 @@
   - Literature search
 
  - Tasks
-  - Ad hoc search
-  - Classification
-  - Question Answering 
+  - Ad hoc search - find relevant documents for an arbitrary text query
+  - Classification - Identify relevant labels for documents
+  - Question Answering - Give specific answer to a question
+  - Filtering - Identify relevant user profiles for a new document 
+
+Jon Tran - "We cannot possibly produce enough content (excluding video) to fill up our storage capacity"
+
+## Big Issues in IR
+
+ - Relevance
+ - Evaluation
+ - Users and Information Needs
+
+## IR and Search Engines
+
+ - Indexes are data structures designed to improve search efficiency (not a huge issue, according to jon)
+
+
+
+
+
+
+
+
+
+
+
