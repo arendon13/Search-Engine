@@ -25,3 +25,12 @@ task hello(type: JavaExec) {
 
     main = 'edu.csula.cs454.example.HelloWorld'
 }
+
+task crawler(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'edu.csula.cs454.crawler.CrawlerController'
+      // simple defensive programming to define optional arguments
+    if (project.hasProperty("arguments")) {
+        args arguments.split(" ")
+    }
+}

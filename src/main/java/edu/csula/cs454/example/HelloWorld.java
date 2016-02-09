@@ -4,9 +4,7 @@ public class HelloWorld {
     private static String name = "Search Engine";
 
     public static void main(String[] args) {
-        System.out.println(
-            String.format("Hello %s", getName())
-        );
+        //System.out.println( String.format("Hello %s", getName()));
 	
 	System.out.print("YEA!!! LEGO!!!!");
 
