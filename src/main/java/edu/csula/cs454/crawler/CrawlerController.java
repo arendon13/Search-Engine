@@ -5,7 +5,7 @@ public class CrawlerController {
 	 private static CrawlerController instance = null;
 	 MyCrawler crawler;
 	 private String storageFolder;
-	 private CrawlerController(){}
+	 private CrawlerController(){}//to enforce singleton 
 	 public static CrawlerController getInstance(){
 		 if(instance == null) {
 	         instance = new CrawlerController();
