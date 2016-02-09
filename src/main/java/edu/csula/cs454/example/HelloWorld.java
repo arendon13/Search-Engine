@@ -7,6 +7,10 @@ public class HelloWorld {
         System.out.println(
             String.format("Hello %s", getName())
         );
+	
+	System.out.print("YEA!!! LEGO!!!!");
+
+
     }
 
     public static String getName() {
