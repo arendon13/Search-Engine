@@ -9,6 +9,7 @@ repositories {
 }
 
 dependencies {
+    //wtf is 'guava'!?!? prune it?
     compile 'com.google.guava:guava:18.0'
     compile 'edu.uci.ics:crawler4j:4.2'
     compile 'org.apache.tika:tika-parsers:1.11'
@@ -31,5 +32,5 @@ task hello(type: JavaExec) {
 task crawl(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 
-    main = 'edu.csula.cs454.crawler.CrawlerController'
+    main = 'edu.csula.cs454.crawler.CrawlerApp'
 }
