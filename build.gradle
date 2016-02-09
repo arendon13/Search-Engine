@@ -24,8 +24,12 @@ test {
 
 task hello(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-
     main = 'edu.csula.cs454.example.HelloWorld'
+}
+
+task data_dump(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'edu.csula.cs454.data_dump.DataDump'
 }
 
 

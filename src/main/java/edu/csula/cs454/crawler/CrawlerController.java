@@ -11,10 +11,10 @@ public class CrawlerController {
 	         instance = new CrawlerController();
 	      }
 	      return instance;		 
-	 }
+	}
 	public void addSeed(String seed) {
-		// TODO add see to the crawler
-		  
+		// TODO add seed to the crawler
+		
 	}
 	public void setStorageFolder(String folder) {
 		storageFolder = folder;
