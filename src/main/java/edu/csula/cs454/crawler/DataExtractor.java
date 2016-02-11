@@ -1,6 +1,9 @@
 package edu.csula.cs454.crawler;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import org.bson.Document;
@@ -19,6 +22,9 @@ public class DataExtractor extends Thread implements Runnable {
 			controller = CrawlerController.getInstance();
 			storageFolder = controller.getStorageFolder();
 			database = controller.getMetaDataStorageDatabase();
+			//check to see if the storage folder exsists 
+			File storageDir = new File(storageFolder);
+			if(!storageDir.exists())storageDir.mkdir();
 		}
 		MongoClient mongoClient =  new MongoClient();
 		MongoCollection collection = mongoClient.getDatabase(database).getCollection("Docs");		
@@ -26,7 +32,7 @@ public class DataExtractor extends Thread implements Runnable {
 		{			
 			while(controller.hasDocuments())
 			{
-				/*org.jsoup.nodes.Document doc = controller.getNextDocument();
+				org.jsoup.nodes.Document doc = controller.getNextDocument();
 				String docURL = doc.location();
 				System.out.println("Absolute URL: "+docURL);	
 				//Create object that will store metadata 
@@ -37,23 +43,18 @@ public class DataExtractor extends Thread implements Runnable {
 				//write document to disk 
 				PrintWriter docFile;
 				try {
+					new FileOutputStream(fileName, false).close();
 					docFile = new PrintWriter (fileName, "UTF-8");
 					docFile.print(doc.toString());
 					docFile.close();
 				} catch (FileNotFoundException | UnsupportedEncodingException e) {
-					System.out.print("Something Went Wrong when saving crawled file locally:(");
+					System.out.println("Something Went Wrong when writting to crawled file locally:(");
 					e.printStackTrace();
 					System.exit(0);
+				} catch (IOException e) {
+					System.out.println("Something Went Wrong when saving crawled file locally:(");
+					e.printStackTrace();
 				}
-				
-				//get time stamp 
-				//LocalDateTime localDateTime = LocalDateTime.now();
-				
-				//docMetaData.put();
-				//String urlHash = 
-				
-				//System.out.println("TimeStamp: "+ localDateTime.toString());*/
-	
 			}			
 		}	
 		mongoClient.close();
