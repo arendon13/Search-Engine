@@ -38,7 +38,7 @@ public class WebCrawler {
 		for(String seed: seeds)
 		{
 			try{
-				Document doc = Jsoup.connect("http://en.wikipedia.org/").get();
+				Document doc = Jsoup.connect(seed).get();
 				docs.push(doc);
 			    System.out.print(doc.toString());
 			}catch(Exception e){

@@ -1,5 +1,6 @@
 package edu.csula.cs454.crawler;
 
+import org.bouncycastle.jcajce.provider.digest.MD5;
 import org.jsoup.nodes.Document;
 
 public class DataExtractor extends Thread implements Runnable {
@@ -20,7 +21,7 @@ public class DataExtractor extends Thread implements Runnable {
 				//get document 
 				Document doc = controller.getNextDocument();
 				//TODO Start Extracting the data and storing it in storage folder
-				
+			
 			}			
 		}		
 	}
