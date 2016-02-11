@@ -5,6 +5,7 @@ import java.util.Stack;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 public class WebCrawler {
 	
 	private ArrayList<String> seeds;
@@ -39,8 +40,10 @@ public class WebCrawler {
 		{
 			try{
 				Document doc = Jsoup.connect(seed).get();
+				Elements elts = doc.select("a");
+				System.out.println("Links found: "+elts.size());
 				docs.push(doc);
-			    System.out.print(doc.toString());
+			    //System.out.print(doc.toString());
 			}catch(Exception e){
 				System.out.println("Something went wrong!!!");
 				System.exit(0);

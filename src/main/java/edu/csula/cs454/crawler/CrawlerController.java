@@ -10,8 +10,10 @@ public class CrawlerController {
 	 private int numOfExtractors = 1;
 	 WebCrawler crawler;
 	 private String storageFolder;
+	 private String database;
 	 private boolean isCrawling;
 	 private boolean poping =false;
+	 private boolean shouldExtract = false;
 
 	 private CrawlerController(){//made private to enforce singleton 
 		 System.out.println("Creating Crawler Controller");
@@ -27,7 +29,6 @@ public class CrawlerController {
 	      return instance;		 
 	}
 	public void addSeed(String seed) {
-		//add seeds
 		 System.out.println("Adding "+seed+" to seed list");
 		 crawler.addSeed(seed);
 	}
@@ -45,11 +46,15 @@ public class CrawlerController {
 	public void start (){
 		extractors = new DataExtractor[numOfExtractors];
 		//set up data extractor threads 
-		for(DataExtractor e: extractors)
+		if(shouldExtract)
 		{
-			e = new DataExtractor();
-			e.start();
-		}	
+			for(DataExtractor e: extractors)
+			{
+				e = new DataExtractor();
+				e.start();
+			}	
+		}
+			
 		isCrawling = true;
 		crawler.crawl();
 		isCrawling = false;
@@ -73,5 +78,17 @@ public class CrawlerController {
 		Document d = docs.pop();
 		poping = false;
 		return d;
+	}
+
+	public String getMetaDataStorageDatabase() {
+		return database;
+	}
+	
+	public void setMetaDataStorageDatabase(String db){
+		database = db;
+	}
+
+	public void enableExtraction(boolean b) {
+		shouldExtract = b;
 	}
 }
