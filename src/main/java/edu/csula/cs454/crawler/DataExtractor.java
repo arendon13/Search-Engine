@@ -1,12 +1,10 @@
 package edu.csula.cs454.crawler;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bouncycastle.jcajce.provider.digest.MD5;
-import org.jsoup.nodes.Document;
-
-import com.mongodb.BasicDBObject;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 import com.mongodb.MongoClient;
 import com.mongodb.client.*;
 
@@ -28,18 +26,36 @@ public class DataExtractor extends Thread implements Runnable {
 		{			
 			while(controller.hasDocuments())
 			{
-				Document doc = controller.getNextDocument();
-				//TODO Start Extracting the data and storing it in storage folder
-				//create empty object to store doceuments meta data
-				Map<String, Object> docMetaData = new HashMap<String, Object>();
+				/*org.jsoup.nodes.Document doc = controller.getNextDocument();
+				String docURL = doc.location();
+				System.out.println("Absolute URL: "+docURL);	
+				//Create object that will store metadata 
+				org.bson.Document docMetaData = new org.bson.Document( "url", docURL);
+				collection.insertOne(docMetaData);
+				//create a string reference file (<storagefolder>/<mongoid>.html)
+				String fileName = storageFolder+"/"+((ObjectId)docMetaData.get( "_id" )).toHexString()+".html";
+				//write document to disk 
+				PrintWriter docFile;
+				try {
+					docFile = new PrintWriter (fileName, "UTF-8");
+					docFile.print(doc.toString());
+					docFile.close();
+				} catch (FileNotFoundException | UnsupportedEncodingException e) {
+					System.out.print("Something Went Wrong when saving crawled file locally:(");
+					e.printStackTrace();
+					System.exit(0);
+				}
+				
+				//get time stamp 
+				//LocalDateTime localDateTime = LocalDateTime.now();
+				
 				//docMetaData.put();
 				//String urlHash = 
-				System.out.println("Absolute URL: "+doc.location());				
 				
-				//		
+				//System.out.println("TimeStamp: "+ localDateTime.toString());*/
+	
 			}			
 		}	
 		mongoClient.close();
-		//collection.close();
 	}
 }
