@@ -1,9 +1,14 @@
 package edu.csula.cs454.crawler;
 
+import java.util.Stack;
+
+import org.jsoup.nodes.Document;
+
 
 //This will be a Singleton instance to avoid multithreaded confusion
 public class CrawlerController {
 	 private static CrawlerController instance = null;
+	 private Stack<Document> docs;
 	// CrawlConfig config;
 	 ToastCrawler crawler;
 	 private String storageFolder;
@@ -11,8 +16,9 @@ public class CrawlerController {
 
 	 private CrawlerController(){//made private to enforce singleton 
 		 System.out.println("Creating Crawler Controller");
+		 docs = new Stack<Document>();
 		// config = new CrawlConfig();
-		 crawler = new ToastCrawler();
+		 crawler = new ToastCrawler(docs);
 		// seeds = new ArrayList<String>();
 	 }
 	 
