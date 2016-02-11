@@ -48,6 +48,7 @@ public class CrawlerController {
 		//set up data extractor threads 
 		if(shouldExtract)
 		{
+			System.out.println("Setting up data Extractors");
 			for(DataExtractor e: extractors)
 			{
 				e = new DataExtractor();
