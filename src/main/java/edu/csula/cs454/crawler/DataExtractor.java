@@ -3,7 +3,9 @@ package edu.csula.cs454.crawler;
 import org.bouncycastle.jcajce.provider.digest.MD5;
 import org.jsoup.nodes.Document;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 
 public class DataExtractor extends Thread implements Runnable {
 	
@@ -18,17 +20,14 @@ public class DataExtractor extends Thread implements Runnable {
 			database = controller.getMetaDataStorageDatabase();
 		}
 		
-				
+		MongoCollection collection = new MongoClient().getDatabase(database).getCollection("Doc");		
 		while(controller.isCrawling())
 		{			
 			while(controller.hasDocuments())
 			{
-				//get document 
 				Document doc = controller.getNextDocument();
 				//TODO Start Extracting the data and storing it in storage folder
-				MongoClient mongoClient = new MongoClient();
-				MongoDatabase db = mongoClient.getDatabase(database);
-				
+				//collection.insertOne(doc);
 			}			
 		}		
 	}
