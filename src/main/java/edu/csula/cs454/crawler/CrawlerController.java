@@ -1,24 +1,22 @@
 package edu.csula.cs454.crawler;
 
 import java.util.Stack;
-
 import org.jsoup.nodes.Document;
-
-
 //This will be a Singleton instance to avoid multithreaded confusion
 public class CrawlerController {
 	 private static CrawlerController instance = null;
 	 private Stack<Document> docs;
 	 private DataExtractor[] extractors;
 	 private int numOfExtractors = 1;
-	 ToastCrawler crawler;
+	 WebCrawler crawler;
 	 private String storageFolder;
 	 private boolean isCrawling;
+	 private boolean poping =false;
 
 	 private CrawlerController(){//made private to enforce singleton 
 		 System.out.println("Creating Crawler Controller");
 		 docs = new Stack<Document>();
-		 crawler = new ToastCrawler(docs);
+		 crawler = new WebCrawler(docs);
 		 isCrawling = false;
 	 }
 	 
@@ -45,7 +43,6 @@ public class CrawlerController {
 	}
 	
 	public void start (){
-		//TODO start crawling and extracting meta data 
 		extractors = new DataExtractor[numOfExtractors];
 		//set up data extractor threads 
 		for(DataExtractor e: extractors)
@@ -66,11 +63,15 @@ public class CrawlerController {
 		return isCrawling;
 	}
 
-	public synchronized boolean hasDocuments() {		
+	public synchronized boolean hasDocuments() {
+		while(poping);
 		return !docs.isEmpty();
 	}
 
 	public synchronized Document getNextDocument() {
-		return docs.pop();
+		poping = true;
+		Document d = docs.pop();
+		poping = false;
+		return d;
 	}
 }
