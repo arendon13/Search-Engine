@@ -39,11 +39,19 @@ public class WebCrawler {
 		for(String seed: seeds)
 		{
 			try{
+				//get document 
 				Document doc = Jsoup.connect(seed).get();
+				//extract all links for the document
+				ArrayList<String> links = new ArrayList<String>();
 				Elements elts = doc.select("a");
-				System.out.println("Links found: "+elts.size());
-				docs.push(doc);
-			    //System.out.print(doc.toString());
+				//System.out.println("Links found: "+elts.size());
+				for(int i = 0, length = elts.size(); i < length;i++)
+				{
+					links.add(elts.get(i).absUrl("href"));
+				}	
+				//add document to list of documents crawled
+				docs.push(doc);				
+				
 			}catch(Exception e){
 				System.out.println("Something went wrong!!!");
 				System.exit(0);

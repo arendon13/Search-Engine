@@ -38,13 +38,15 @@ public class DataExtractor extends Thread implements Runnable {
 			while(controller.hasDocuments())
 			{
 				Document doc = controller.getNextDocument();
-				String docURL = doc.location();
-				System.out.println("Absolute URL: "+docURL);	
+				//extract url
+				String docURL = doc.location();	
 				DocumentMetadata docMetadata = new DocumentMetadata();
 				docMetadata.setURL(docURL);
+				//extract text from the document 
+				System.out.println("CONTENT:");
+				docMetadata.setContent(doc.select("body").text().split(" "));
+				//store in database to get auto-gen id 
 				dataStore.save(docMetadata);
-				System.out.println("Object ID " + docMetadata.getID());
-				//collection.insertOne(docMetaData);
 				//create a string reference file (<storagefolder>/<mongoid>.html)
 				String fileName = storageFolder+"/"+docMetadata.getID().toHexString()+".html";
 				//write document to disk 
@@ -58,16 +60,12 @@ public class DataExtractor extends Thread implements Runnable {
 					e.printStackTrace();
 					System.exit(0);
 				} catch (IOException e) {
-					
 					e.printStackTrace();
 					System.exit(0);
-				}
-				
-				
-				//add path on drive
+				}				
+				//add path on disk
 				docMetadata.setPath((new File(fileName)).getAbsolutePath());		
-				dataStore.save(docMetadata);
-				
+				dataStore.save(docMetadata);				
 			}			
 		}	
 	}
