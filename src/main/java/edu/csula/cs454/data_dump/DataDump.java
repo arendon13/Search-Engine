@@ -30,9 +30,10 @@ public class DataDump {
 			FileWriter jsonWriter = new FileWriter("dump.json");
 			jsonWriter.write(dump.toString(2));
 			jsonWriter.close();
+			System.out.println("Concluded Data Dump");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		mongo.close();
 	}
 }
