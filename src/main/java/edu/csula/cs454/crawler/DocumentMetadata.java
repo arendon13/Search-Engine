@@ -12,6 +12,7 @@ public class DocumentMetadata {
 	private String url;
 	private String path;
 	private String[] content;
+
 	public void setURL(String docURL) {
 		url = docURL;
 	}
