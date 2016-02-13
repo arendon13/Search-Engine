@@ -22,3 +22,6 @@ build/
 # Gradle
 .gradle/
 /bin/
+
+/CrawlerStorage
+*.json

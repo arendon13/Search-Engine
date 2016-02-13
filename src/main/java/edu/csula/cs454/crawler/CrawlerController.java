@@ -92,4 +92,8 @@ public class CrawlerController {
 	public void enableExtraction(boolean b) {
 		shouldExtract = b;
 	}
+	
+	public void setNumberOfExtractors(int extractors){
+		numOfExtractors = extractors;
+	}
 }
