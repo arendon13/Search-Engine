@@ -11,7 +11,7 @@ public class CrawlerApp {
 			 String seed = args[3];
 			 int depth = Integer.parseInt(args[1]);
 			 CrawlerController controller = CrawlerController.getInstance();
-			 controller.setStorageFolder("CrawlerStorge");
+			 controller.setStorageFolder("CrawlerStorage");
 			 controller.setDepth(depth);
 			 controller.addSeed(seed);
 			 controller.setMetaDataStorageDatabase("CrawledData");
