@@ -11,7 +11,6 @@ public class WebCrawler {
 	
 	private ArrayList<String> seeds;
 	private ArrayList<String> visited = new ArrayList<String>();
-	private String storageFolder;
 	private int crawlDepth;
 	private Stack<Document> docs;
 	protected WebCrawler(Stack<Document> docs){
@@ -23,10 +22,6 @@ public class WebCrawler {
 		seeds.add(seed);
 	}
 
-	public void setCrawlStorageFolder(String storageFolder) {
-		this.storageFolder = storageFolder;		
-	}
-
 	public void setCrawlDepth(int depth) {
 		crawlDepth = depth;		
 	}
@@ -36,33 +31,13 @@ public class WebCrawler {
 		
 		visited = null;
 		
-//		for(String seed: seeds)
-//		{
-//			try{
-//				//get document 
-//				Document doc = Jsoup.connect(seed).get();
-//				//extract all links for the document
-//				ArrayList<String> links = new ArrayList<String>();
-//				Elements elts = doc.select("a");
-//				//System.out.println("Links found: "+elts.size());
-//				for(int i = 0, length = elts.size(); i < length;i++)
-//				{
-//					links.add(elts.get(i).absUrl("href"));
-//				}	
-//				//add document to list of documents crawled
-//				docs.push(doc);				
-//				
-//			}catch(Exception e){
-//				System.out.println("Something went wrong!!!");
-//				System.exit(0);
-//			}			
-//		}		
 	}
 	
 	private void recursCrawl(int curDepth, int maxDepth, ArrayList<String> links) {
 		ArrayList<String> childLinks = new ArrayList<String>();
 		
 		for(String i: links){
+			// Condition to check for blank URL's that cause errors
 			if(i.trim().length() == 0 || isVisited(i)){
 				continue;
 			}
@@ -73,17 +48,15 @@ public class WebCrawler {
 				doc = Jsoup.connect(i).get();
 
 				Elements elts = doc.select("a");
-				//System.out.println("Links found: "+elts.size());
 				for(int j = 0, length = elts.size(); j < length; j++)
 				{
+					//Adding links to child list
 					childLinks.add(elts.get(j).absUrl("href"));
-//					System.out.println(elts.get(j).absUrl("href"));
 				}
 				//add document to list of documents crawled
 				docs.push(doc);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-//				e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 		
@@ -96,6 +69,7 @@ public class WebCrawler {
 		
 	}
 	
+	// Methoods are used to make sure we do not repeat 
 	private boolean isVisited(String link){
 		
 		for(String i: visited){
