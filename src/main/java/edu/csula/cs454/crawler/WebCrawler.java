@@ -11,6 +11,7 @@ public class WebCrawler {
 	
 	private ArrayList<String> seeds;
 	private ArrayList<String> visited = new ArrayList<String>();
+	private String storageFolder;
 	private int crawlDepth;
 	private Stack<Document> docs;
 	protected WebCrawler(Stack<Document> docs){
@@ -20,6 +21,10 @@ public class WebCrawler {
 	
 	public void addSeed(String seed) {
 		seeds.add(seed);
+	}
+
+	public void setCrawlStorageFolder(String storageFolder) {
+		this.storageFolder = storageFolder;		
 	}
 
 	public void setCrawlDepth(int depth) {
