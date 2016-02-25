@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import org.jsoup.Jsoup;
+//import org.jsoup.*;
+import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 public class WebCrawler {
@@ -50,8 +52,9 @@ public class WebCrawler {
 			Document doc;
 			System.out.println(curDepth + ": Connecting to..." + i);
 			try {
-				doc = Jsoup.connect(i).get();
-
+				doc = Jsoup.connect(i).get();//connect the html page
+				System.out.println("Documnet Received! ");
+				//get all links on the page 
 				Elements elts = doc.select("a");
 				for(int j = 0, length = elts.size(); j < length; j++)
 				{
@@ -60,8 +63,20 @@ public class WebCrawler {
 				}
 				//add document to list of documents crawled
 				docs.push(doc);
+				//also extract any images on the page 
 			} catch (IOException e) {
-				e.printStackTrace();
+				//if its not html of xml what is it
+				System.out.println("Document connecting is not html");
+				try{
+					Response response = Jsoup.connect(i).ignoreContentType(true).execute();
+					//response.
+					System.out.print("Attempted to connect to: "+response.url());
+					//docs.push(new WebDoument(response));
+				}catch(Exception er){
+					er.printStackTrace();
+				}
+				
+				//
 			}
 		}
 		
@@ -76,13 +91,10 @@ public class WebCrawler {
 	
 	// Methoods are used to make sure we do not repeat 
 	private boolean isVisited(String link){
-		
-		for(String i: visited){
-			if(i.equalsIgnoreCase(link)){
-				return true;
-			}
-		}
-		
+		for(String i: visited)
+		{
+			if(i.equalsIgnoreCase(link))return true;
+		}		
 		return false;
 	}
 	
