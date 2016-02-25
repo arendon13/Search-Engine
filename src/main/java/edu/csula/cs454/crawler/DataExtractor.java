@@ -27,30 +27,36 @@ public class DataExtractor extends Thread implements Runnable {
 			File storageDir = new File(storageFolder);
 			if(!storageDir.exists())storageDir.mkdir();
 			//create morphia instace 
-			MongoClient mongo = new MongoClient();
+			/*MongoClient mongo = new MongoClient();
 			Morphia morphia = new Morphia();
 			morphia.map(DocumentMetadata.class);
-			dataStore = morphia.createDatastore(mongo, database);
+			dataStore = morphia.createDatastore(mongo, database);*/
 		}	
 				
 		while(controller.isCrawling() || controller.hasDocuments())
 		{			
 			while(controller.hasDocuments())
 			{
-				Document doc = controller.getNextDocument();
+				WebDocument doc = controller.getNextDocument();
 				//extract url
-				String docURL = doc.location();	
+				//String docURL = doc.getUrl();	
 				DocumentMetadata docMetadata = new DocumentMetadata();
-				docMetadata.setURL(docURL);
+				docMetadata.setURL(doc.getUrl());
+				docMetadata.setContent(doc.getContent());
+				doc.saveToDisk(storageFolder);
+				docMetadata.setPath(doc.getPath());	
+				docMetadata.setFileExtestion(doc.getExtension());
+				
 				//extract text from the document 
-				System.out.println("CONTENT:");
-				docMetadata.setContent(doc.select("body").text().split(" "));
+				//System.out.println("CONTENT:");
+				//docMetadata.setContent(doc.select("body").text().split(" "));
+				
 				//store in database to get auto-gen id 
-				dataStore.save(docMetadata);
+				//dataStore.save(docMetadata);
 				//create a string reference file (<storagefolder>/<mongoid>.html)
-				String fileName = storageFolder+"/"+docMetadata.getID().toHexString()+".html";
+				//String fileName = storageFolder+"/"+docMetadata.getID().toHexString()+".html";
 				//write document to disk 
-				PrintWriter docFile;
+				/*PrintWriter docFile;
 				try {
 					new FileOutputStream(fileName, false).close();
 					docFile = new PrintWriter (fileName, "UTF-8");
@@ -62,10 +68,10 @@ public class DataExtractor extends Thread implements Runnable {
 				} catch (IOException e) {
 					e.printStackTrace();
 					System.exit(0);
-				}				
+				}*/			
 				//add path on disk
-				docMetadata.setPath((new File(fileName)).getAbsolutePath());		
-				dataStore.save(docMetadata);				
+				//docMetadata.setPath((new File(fileName)).getAbsolutePath());		
+				//dataStore.save(docMetadata);				
 			}			
 		}	
 	}

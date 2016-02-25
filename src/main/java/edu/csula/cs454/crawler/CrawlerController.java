@@ -5,7 +5,7 @@ import org.jsoup.nodes.Document;
 //This will be a Singleton instance to avoid multithreaded confusion
 public class CrawlerController {
 	 private static CrawlerController instance = null;
-	 private Stack<Document> docs;
+	 private Stack<WebDocument> docs;
 	 private DataExtractor[] extractors;
 	 private int numOfExtractors = 1;
 	 WebCrawler crawler;
@@ -17,7 +17,7 @@ public class CrawlerController {
 
 	 private CrawlerController(){//made private to enforce singleton 
 		 System.out.println("Creating Crawler Controller");
-		 docs = new Stack<Document>();
+		 docs = new Stack<WebDocument>();
 		 crawler = new WebCrawler(docs);
 		 isCrawling = false;
 	 }
@@ -74,9 +74,9 @@ public class CrawlerController {
 		return !docs.isEmpty();
 	}
 
-	public synchronized Document getNextDocument() {
+	public synchronized WebDocument getNextDocument() {
 		poping = true;
-		Document d = docs.pop();
+		WebDocument d = docs.pop();
 		poping = false;
 		return d;
 	}

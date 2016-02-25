@@ -11,6 +11,7 @@ public class DocumentMetadata {
 	@Id private ObjectId id;
 	private String url;
 	private String path;
+	private String ext;//file extension
 	private String[] content;
 
 	public void setURL(String docURL) {
@@ -25,5 +26,8 @@ public class DocumentMetadata {
 	}
 	public void setContent(String[] content) {
 		this.content = content;		
+	}
+	public void setFileExtestion(String extension) {
+		ext = extension;
 	}
 }

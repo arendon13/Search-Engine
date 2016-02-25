@@ -5,7 +5,7 @@ public class CrawlerApp {
 		 //String seed = "http://www.calstatela.edu/";
 		 //String seed = "http://maplestory.nexon.net/";
 		 //-d <depth> -u <url> -e
-		 args = new String[]{"-d","0","-u","http://www.noholita.fr/wp-content/uploads/2014/10/KI-Bikini-Body-Training-Guide.pdf",/*"-e",/* "1"*/};
+		 args = new String[]{"-d","0","-u","http://www.craigbailey.net/wp-content/uploads/the-junk-food-remedy.jpg","-e",/*/* "1"*/};
 		 if(args.length > 3 && args[0] == "-d" && args[2] == "-u")
 		 {
 			 String seed = args[3];
