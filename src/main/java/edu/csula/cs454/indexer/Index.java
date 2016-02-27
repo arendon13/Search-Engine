@@ -6,11 +6,14 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
 import org.bson.types.ObjectId;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 @Entity
 public class Index {
     @Id private ObjectId id;
     private String term;
-    private String[][] locations;
+    private ArrayList<ObjectId> locations;
 
     public ObjectId getID() {
         return id;
@@ -24,12 +27,12 @@ public class Index {
         this.term = term;
     }
 
-    public String[][] getLocations() {
-        return locations;
+
+    public void addLocation(ObjectId location) {
+        locations.add(location);
     }
 
-    public void setLocations(String[][] locations) {
+    public void setLocations(ArrayList<ObjectId> locations) {
         this.locations = locations;
     }
-
 }
