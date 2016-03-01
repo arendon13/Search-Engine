@@ -34,7 +34,7 @@ public class CrawlerController {
 	}
 	public void setStorageFolder(String folder) {
 		storageFolder = folder;
-		crawler.setCrawlStorageFolder(storageFolder);
+		//crawler.setCrawlStorageFolder(storageFolder);
 		System.out.println(folder+ " has been set as crawler storage folder");
 	}
 	

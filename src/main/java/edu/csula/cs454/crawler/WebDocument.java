@@ -1,6 +1,7 @@
 package edu.csula.cs454.crawler;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,8 +13,14 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.pdf.PDFParser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
+import org.xml.sax.SAXException;
 
 
 public class WebDocument {
@@ -24,10 +31,7 @@ public class WebDocument {
 	private boolean isHtml;
 	private String fileExtesion = null;
 	private String path = "";
-		
-	//private InputStream input = null;
-	
-	
+
 	public WebDocument(Document doc){
 		//This assumes the document passed in is an html document 
 		this.doc = doc;
@@ -39,13 +43,11 @@ public class WebDocument {
 		//This assues that the docuemnt passed in is something other than an html document 
 		this.response = resp;
 		isHtml = false;
-		//input = in;
 	}
 	
 	public String getUrl(){
 		if(isHtml)return doc.location();
 		else return clean(response.url().toString()); 				
-		//return null;
 	}
 	
 	private String clean(String dirtyUrl){
@@ -60,15 +62,45 @@ public class WebDocument {
 	
 	public String[] getContent(){
 		if(isHtml)return doc.select("body").text().split(" ");
-		else return new String[]{};//TODO this is temparary  should check based on file type 
-		
-		//return null;
+		else{
+			
+			if(getExtension()== "pdf"){
+				  BodyContentHandler handler = new BodyContentHandler();
+			      Metadata metadata = new Metadata();
+			      FileInputStream inputstream;
+				try {
+				  inputstream = new FileInputStream(getPath());
+				  ParseContext pcontext = new ParseContext();
+			      //parsing the document using PDF parser
+			      PDFParser pdfparser = new PDFParser(); 
+			      pdfparser.parse(inputstream, handler, metadata,pcontext);
+			      return handler.toString().split(" ");
+					
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TikaException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			     
+			}
+			
+			
+			return new String[]{};//TODO this is temparary  should check based on file type 
+		}
 	}
 	
 	public String getExtension(){
 		if(fileExtesion != null)return fileExtesion;
-		//TODO find out the file extension
 		fileExtesion = FilenameUtils.getExtension(getUrl());
+		//TODO if file extension is empty use tika to resolve;
 		return fileExtesion;
 	}
 	
