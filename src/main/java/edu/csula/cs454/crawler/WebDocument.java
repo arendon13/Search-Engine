@@ -8,11 +8,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+import java.util.ArrayList;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.standard.StandardFilter;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.StopAnalyzer;
+import org.apache.lucene.analysis.StopFilter;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.util.Version;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -60,8 +71,53 @@ public class WebDocument {
 		return dirtyUrl;
 	}
 	
+	private String[] extractMeaningfulContent(String content){
+		
+		  Tokenizer tokenizer = new StandardTokenizer(Version.LUCENE_36, new StringReader(content));
+		  CharArraySet stopSet = CharArraySet.copy(Version.LUCENE_36,StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+		  stopSet.add("for");
+		  stopSet.add("the");
+		  StandardFilter standardFilter = new StandardFilter(Version.LUCENE_36, tokenizer);
+		  StopFilter stopFilter = new StopFilter(Version.LUCENE_36, standardFilter, stopSet);
+		  CharTermAttribute charTermAttribute = (CharTermAttribute) tokenizer.addAttribute(CharTermAttribute.class);
+		  ArrayList<String> words = new ArrayList<String>();
+		    try { 	
+				 while(stopFilter.incrementToken()){
+			        String token = charTermAttribute.toString().toString().toLowerCase();
+			        //TODO may want to do some stemming here 
+			        if(isLikelyAWord(token))words.add(token);
+				 }
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		    int length = words.size();
+		    String[] finalWords = new String[length];
+		    
+		    for(int i = 0; i < length; i++)
+		    {
+		    	finalWords[i] = words.get(i);
+		    }
+		  return finalWords; 
+		//return content.split(" ");
+	}
+		
+	private boolean isLikelyAWord(String word){
+		int length = word.length();
+		if(length == 1)return false;
+		for(int i = 0; i  < length; i++)
+		{
+			int c = word.charAt(i);
+			if((c >= 65 && c < 91))continue;
+			if((c >= 97 && c < 123))continue;
+			return false;
+		}
+		return true;
+	}
+	
 	public String[] getContent(){
-		if(isHtml)return doc.select("body").text().split(" ");
+		
+		if(isHtml)return extractMeaningfulContent(doc.select("body").text());
 		else{
 			
 			if(getExtension()== "pdf"){
@@ -74,7 +130,7 @@ public class WebDocument {
 			      //parsing the document using PDF parser
 			      PDFParser pdfparser = new PDFParser(); 
 			      pdfparser.parse(inputstream, handler, metadata,pcontext);
-			      return handler.toString().split(" ");
+			      return extractMeaningfulContent(handler.toString());
 					
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -91,7 +147,6 @@ public class WebDocument {
 				}
 			     
 			}
-			
 			
 			return new String[]{};//TODO this is temparary  should check based on file type 
 		}
