@@ -22,18 +22,25 @@ public class Rank {
 		
 		System.out.println("\nAfter first iteration: \n");
 		
-		DocRankFirstIter(docA, docB, docC);
+		double oldA = 0;
+		double oldB = 0; 
+		double oldC = 0;
+		
+		docRank(docA, docB, docC, oldA, oldB, oldC);
 		
 		
 	}
 	
-	public static void DocRankFirstIter(ExampleDocument docA, ExampleDocument docB, ExampleDocument docC){
-		ArrayList<ExampleDocument> aLinks = new ArrayList<ExampleDocument>();
-		ArrayList<ExampleDocument> bLinks = new ArrayList<ExampleDocument>();
-		ArrayList<ExampleDocument> cLinks = new ArrayList<ExampleDocument>();
-		aLinks.add(docB); aLinks.add(docC);
-		bLinks.add(docC);
-		cLinks.add(docA);
+	public static void docRank(ExampleDocument docA, ExampleDocument docB, ExampleDocument docC, double oldRankA, double oldRankB, double oldRankC){
+		ArrayList<ExampleDocument> linksToA = new ArrayList<ExampleDocument>();
+		ArrayList<ExampleDocument> linksToB = new ArrayList<ExampleDocument>();
+		ArrayList<ExampleDocument> linksToC = new ArrayList<ExampleDocument>();
+		linksToA.add(docC); 
+		linksToB.add(docA);
+		linksToC.add(docA); linksToC.add(docB);
+		oldRankA = docA.getRank();
+		oldRankB = docB.getRank();
+		oldRankC = docC.getRank();
 		double newRankA = docC.getRank() / docC.getOutGoingLinks();
 		double newRankB = docA.getRank() / docA.getOutGoingLinks();
 		double newRankC = (docA.getRank() / docA.getOutGoingLinks()) + (docB.getRank() / docB.getOutGoingLinks());
@@ -43,7 +50,21 @@ public class Rank {
 		
 		docA.setRank(newRankA); docB.setRank(newRankB); docC.setRank(newRankC);
 		
-		System.out.println("A: " + docA.getRank() + "\nB: " + docB.getRank() + "\nC: " + docC.getRank());
+		System.out.println(oldRankA != docA.getRank());
+		System.out.println(oldRankB != docB.getRank());
+		System.out.println(oldRankC != docC.getRank());
+		System.out.println("A: " + docA.getRank() + "\nB: " + docB.getRank() + "\nC: " + docC.getRank() + "\n");
+		
+		// Will call recursion until the rank converges.
+		// Compares Old values with new values.
+		if(oldRankA != docA.getRank() || oldRankB != docB.getRank() || oldRankC != docC.getRank()){
+			docRank(docA, docB, docC, oldRankA, oldRankB, oldRankC);
+		}
+		else{
+			System.out.println("\nRecursion finished. final converged result is: ");
+			System.out.println("A: " + docA.getRank() + "\nB: " + docB.getRank() + "\nC: " + docC.getRank());
+			return;
+		}
 	}
 	
 	public static double round(double x){
