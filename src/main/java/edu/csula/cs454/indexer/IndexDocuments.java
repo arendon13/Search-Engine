@@ -19,10 +19,9 @@ public class IndexDocuments {
     public static void main(String args[]){
         final Morphia morphia = new Morphia();
         final Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
-        //ds.delete(ds.createQuery(Index.class));
+        ds.delete(ds.createQuery(Index.class));
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
         int totalDocs = (int) documents.countAll();
-        calculateTfIdf(ds, totalDocs);
 
         for (DocumentMetadata doc : documents){
             for (String term : doc.getContent()) {
@@ -39,16 +38,15 @@ public class IndexDocuments {
                 }
             }
         }
-
-
-
+        System.out.println("Done indexing, calculating tf-idf");
+        calculateTfIdf(ds, totalDocs);
     }
 
     private static void calculateTfIdf(Datastore ds, int totalDocs) {
         double tfIdf;
         for (Index term : ds.find(Index.class)){
             tfIdf = Math.log10(totalDocs / term.docCount());
-            System.out.println(term.getTerm() + " TF-IDF: " + tfIdf);
+            //System.out.println(term.getTerm() + " TF-IDF: " + tfIdf);
             term.setTfIdf(tfIdf);
             ds.save(term);
         }
