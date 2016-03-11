@@ -6,11 +6,17 @@ public class ExampleDocument {
 	private double rank;
 	private int outGoingLinks;
 	private String randomURL;
+	private ArrayList<String> pointsToDoc;
 	
-	public ExampleDocument(String randomURL, double rank, int outGoingLinks){
+	public ExampleDocument(String randomURL, double rank, int outGoingLinks, ArrayList<String> pointsToDoc){
 		this.randomURL = randomURL;
 		this.rank = rank;
 		this.outGoingLinks = outGoingLinks;
+		this.pointsToDoc = pointsToDoc;
+	}
+
+	public ArrayList<String> getPointsToDoc() {
+		return pointsToDoc;
 	}
 
 	public double getRank() {

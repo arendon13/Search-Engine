@@ -2,8 +2,14 @@ package edu.csula.cs454.crawler;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
 
 public class Rank {
+	static Map<String, ExampleDocument> docs = new HashMap<String, ExampleDocument>();
+	
 	public static void main(String args[]){
 		DecimalFormat df = new DecimalFormat("0.00");
 		
@@ -14,9 +20,18 @@ public class Rank {
 //		double rankDocC = round(distRank);
 //		ArrayList<ExampleDocument> aLinks = new ArrayList<ExampleDocument>();
 //		aLinks.add()
-		ExampleDocument docA = new ExampleDocument("URL1", round(distRank), 2);
-		ExampleDocument docB = new ExampleDocument("URL2", round(distRank), 1);
-		ExampleDocument docC = new ExampleDocument("URL3", round(distRank), 1);
+		ArrayList<String> pointsToA = new ArrayList<String>();
+//		aPointsTo.add("URLB"); aPointsTo.add("URLC");
+		ArrayList<String> pointsToB = new ArrayList<String>();
+//		bPointsTo.add("URLC");
+		ArrayList<String> pointsToC = new ArrayList<String>();
+//		cPointsTo.add("URLA");
+		ExampleDocument docA = new ExampleDocument("URLA", round(distRank), 2, pointsToA);
+		ExampleDocument docB = new ExampleDocument("URLB", round(distRank), 1, pointsToB);
+		ExampleDocument docC = new ExampleDocument("URLC", round(distRank), 1, pointsToC);
+		docs.put(docA.getRandomURL(), docA);
+		docs.put(docB.getRandomURL(), docB);
+		docs.put(docC.getRandomURL(), docC);
 		
 		System.out.println("A: " + docA.getRank() + "\nB: " + docB.getRank() + "\nC: " + docC.getRank());
 		
@@ -26,18 +41,84 @@ public class Rank {
 		double oldB = 0; 
 		double oldC = 0;
 		
-		docRank(docA, docB, docC, oldA, oldB, oldC);
+		pointsToC.add("URLA"); pointsToC.add("URLB");
+		pointsToB.add("URLA");
+		pointsToA.add("URLC");
+		
+		ArrayList<ExampleDocument> collection = new ArrayList<ExampleDocument>();
+		collection.add(docA); collection.add(docB); collection.add(docC);
+		
+//		Map<String, Double> oldRanks = getRanks(collection);
+	
+		collectionRank(collection);
+		
+//		System.out.println("\nA: " + docA.getRank() + "\nB: " + docB.getRank() + "\nC: " + docC.getRank());
+
+		
+//		docRank(docA, docB, docC, oldA, oldB, oldC);
 		
 		
 	}
 	
+	public static void collectionRank(ArrayList<ExampleDocument> collection){
+//		for(int i = 0; i < 20; i++){
+		double sum;
+		double oldRank;
+		boolean recurs = false;
+		System.out.println("Before loop: " + recurs);
+		Map<String, Double> oldRanks = getRanks(collection);
+		for(ExampleDocument doc: collection){
+			System.out.print(doc.getRandomURL() + ": ");
+			sum = 0.0;
+			oldRank = 0.0;
+			
+			for(String path: doc.getPointsToDoc()){
+				ExampleDocument v = docs.get(path);
+				oldRank = oldRanks.get(path);
+				
+				System.out.print("(Current V: " + oldRank + "/" + v.getOutGoingLinks() + ")");
+				System.out.print("(Sum Before: " + sum + ") ");
+				System.out.print(path + " ");
+				sum += oldRank / v.getOutGoingLinks();
+				System.out.print("(Sum: " + sum + ") ");
+			}
+			System.out.println("");
+			double newRank = round(sum);
+			
+			if(!recurs){
+				oldRank = oldRanks.get(doc.getRandomURL());
+				double change = newRank - oldRank;
+				System.out.println(newRank + " - " + oldRank + " = " + change);
+				if(change != 0){
+					recurs = true;
+				}
+			}
+			
+			doc.setRank(newRank);
+		}
+		
+//		System.out.println("\nA: " + collection.get(0).getRank() + "\nB: " + collection.get(1).getRank() + "\nC: " + collection.get(2).getRank());
+//		System.out.println("Continue?: " + recurs);
+//		}
+		
+		if(recurs){
+			collectionRank(collection);
+		}
+		else{
+			System.out.println("\nRecursion finished. final converged result is: ");
+			System.out.println("A: " + collection.get(0).getRank() + "\nB: " + collection.get(1).getRank() + "\nC: " + collection.get(2).getRank());
+			return;
+		}
+	}
+	
 	public static void docRank(ExampleDocument docA, ExampleDocument docB, ExampleDocument docC, double oldRankA, double oldRankB, double oldRankC){
-		ArrayList<ExampleDocument> linksToA = new ArrayList<ExampleDocument>();
-		ArrayList<ExampleDocument> linksToB = new ArrayList<ExampleDocument>();
-		ArrayList<ExampleDocument> linksToC = new ArrayList<ExampleDocument>();
-		linksToA.add(docC); 
-		linksToB.add(docA);
-		linksToC.add(docA); linksToC.add(docB);
+		// following commented lines of code were written with the thought of making a loop easier. Not currently used.
+//		ArrayList<ExampleDocument> linksToA = new ArrayList<ExampleDocument>();
+//		ArrayList<ExampleDocument> linksToB = new ArrayList<ExampleDocument>();
+//		ArrayList<ExampleDocument> linksToC = new ArrayList<ExampleDocument>();
+//		linksToA.add(docC); 
+//		linksToB.add(docA);
+//		linksToC.add(docA); linksToC.add(docB);
 		oldRankA = docA.getRank();
 		oldRankB = docB.getRank();
 		oldRankC = docC.getRank();
@@ -69,6 +150,15 @@ public class Rank {
 	
 	public static double round(double x){
 		return Math.round(x * 100.0) / 100.0;
+	}
+	
+	public static Map<String, Double> getRanks(ArrayList<ExampleDocument> collection){
+		Map<String, Double> oldRanks = new HashMap<String, Double>();
+		for(ExampleDocument doc: collection){
+			oldRanks.put(doc.getRandomURL(), doc.getRank());
+		}
+		
+		return oldRanks;
 	}
 }
 
