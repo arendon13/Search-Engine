@@ -19,14 +19,17 @@ public class IndexDocuments {
     public static void main(String args[]){
         final Morphia morphia = new Morphia();
         final Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
-        ds.delete(ds.createQuery(Index.class));
+        //ds.delete(ds.createQuery(Index.class));
+        Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
+        int totalDocs = (int) documents.countAll();
+        calculateTfIdf(ds, totalDocs);
 
-        for (DocumentMetadata doc : ds.find(DocumentMetadata.class)){
-            for (String term : doc.getContent()){
+        for (DocumentMetadata doc : documents){
+            for (String term : doc.getContent()) {
                 //Check if term exists in index
                 //if if does, then append class with new id
                 // otherwise, create new class and add to db
-                if (!termExistsInIndex(ds, term, doc.getID())){
+                if (!termExistsInIndex(ds, term, doc.getID())) {
                     Map<ObjectId, Integer> locations = new HashMap<ObjectId, Integer>();
                     locations.put(doc.getID(), 1);
                     Index newTerm = new Index();
@@ -35,6 +38,19 @@ public class IndexDocuments {
                     ds.save(newTerm);
                 }
             }
+        }
+
+
+
+    }
+
+    private static void calculateTfIdf(Datastore ds, int totalDocs) {
+        double tfIdf;
+        for (Index term : ds.find(Index.class)){
+            tfIdf = Math.log10(totalDocs / term.docCount());
+            System.out.println(term.getTerm() + " TF-IDF: " + tfIdf);
+            term.setTfIdf(tfIdf);
+            ds.save(term);
         }
     }
 

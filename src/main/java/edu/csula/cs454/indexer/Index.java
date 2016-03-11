@@ -10,6 +10,7 @@ public class Index {
     @Id private ObjectId id;
     private String term;
     private Map<ObjectId, Integer> locations;
+    private double tfIdf;
 
     public ObjectId getID() {
         return id;
@@ -32,8 +33,15 @@ public class Index {
             locations.put(location, 1);
         }
     }
+    public int docCount(){
+        return locations.size();
+    }
 
     public void setLocations(Map<ObjectId, Integer> locations) {
         this.locations = locations;
+    }
+
+    public void setTfIdf(double tfIdf) {
+        this.tfIdf = tfIdf;
     }
 }
