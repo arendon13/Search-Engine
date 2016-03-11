@@ -17,12 +17,13 @@ hs_err_pid*
 .project
 .settings/
 build/
-*.json
+dump.json
 
 # Gradle
 .gradle/
 /bin/
 
 /CrawlerStorage
-*.json
 *.iml
+
+*/node_modules/
