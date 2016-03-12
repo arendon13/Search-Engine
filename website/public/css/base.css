@@ -1,3 +1,10 @@
-body {
-	background-color: #4d4d4d;
+.resultHeader {
+	color: #4885ed;
 }
+.result {
+	color: green;
+}
+
+.tiny { 
+	    font-size: 6;
+		}
