@@ -45,6 +45,9 @@ public class DocumentMetadata {
 	public void setNumOutGoingLinks(int num){
 		numLinksOut = num;
 	}
+	public void setLinksToThisDoc(ArrayList<String> links){
+		this.links = links;
+	}	
 	public ArrayList<String> getLinksToThisDoc(){
 		
 		return links;

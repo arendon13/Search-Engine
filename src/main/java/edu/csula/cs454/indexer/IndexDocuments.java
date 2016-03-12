@@ -29,13 +29,27 @@ public class IndexDocuments {
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
         int totalDocs = (int) documents.countAll();
         double initPageRankScore = 1.0/totalDocs;
-        
+        //create a hash ap for 
+        Map<String, ArrayList<String>> linkToMap = new HashMap<String, ArrayList<String>>();
         //Start indexing!! :D
         for (DocumentMetadata doc : documents)
         {
         	//add intial page rank value for each document 
         	doc.setRank(initPageRankScore);
-            for (String term : doc.getContent()) {
+        	ArrayList<String> outlinks = doc.getOutGoingLinks();
+        	for(String link: outlinks)
+        	{
+        		ArrayList<String> links = linkToMap.get(link);
+        		if(links == null)
+        		{
+        			links = new ArrayList<String>();
+        			linkToMap.put(link,links);
+        		}
+        		
+        		links.add(doc.getUrl());        		
+        	}
+        	
+            for (String term : doc.getContent()){
                 //Check if term exists in index
                 //if if does, then append class with new id
                 // otherwise, create new class and add to db
@@ -51,8 +65,10 @@ public class IndexDocuments {
             ds.save(doc);
         }
         System.out.println("Done indexing!");
+        //memory clean up
+        
         System.out.println("Let the ranking begin!!");
-        Ranker.rankAllDocuments();      	
+        Ranker.rankAllDocuments(ds, linkToMap);      	
     }
 
    /* private static void calculateTfIdf(Datastore ds, int totalDocs) {

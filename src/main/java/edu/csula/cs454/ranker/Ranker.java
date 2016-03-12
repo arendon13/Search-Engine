@@ -13,11 +13,11 @@ import edu.csula.cs454.indexer.Index;
 
 public class Ranker {
 	
-	public static void rankAllDocuments(){
-		Morphia morphia = new Morphia();
+	public static void rankAllDocuments(Datastore ds){
+		/*Morphia morphia = new Morphia();
         morphia.map(DocumentMetadata.class);
         morphia.map(Index.class);
-        Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
+        Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");*/
         //calculate the page rank for each document
         List<DocumentMetadata> documents = ds.find(DocumentMetadata.class).asList();
         collectionRank(documents); 
