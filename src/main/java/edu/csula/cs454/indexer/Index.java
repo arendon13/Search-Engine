@@ -41,7 +41,7 @@ public class Index {
         this.locations = locations;
     }
 
-    public void setTfIdf(double tfIdf) {
+    /*public void setTfIdf(double tfIdf) {
         this.tfIdf = tfIdf;
-    }
+    }*/
 }

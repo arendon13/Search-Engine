@@ -1,4 +1,4 @@
-package edu.csula.cs454.crawler;
+package edu.csula.cs454.ranker;
 
 import java.util.ArrayList;
 

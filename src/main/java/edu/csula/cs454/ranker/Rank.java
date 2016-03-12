@@ -1,4 +1,4 @@
-package edu.csula.cs454.crawler;
+package edu.csula.cs454.ranker;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
+
 
 public class Rank {
 	static Map<String, ExampleDocument> docs = new HashMap<String, ExampleDocument>();
@@ -15,17 +16,9 @@ public class Rank {
 		
 		int collectionSize = 3;
 		double distRank = 1.0 / collectionSize;
-//		double rankDocA = round(distRank);
-//		double rankDocB = round(distRank);
-//		double rankDocC = round(distRank);
-//		ArrayList<ExampleDocument> aLinks = new ArrayList<ExampleDocument>();
-//		aLinks.add()
 		ArrayList<String> pointsToA = new ArrayList<String>();
-//		aPointsTo.add("URLB"); aPointsTo.add("URLC");
 		ArrayList<String> pointsToB = new ArrayList<String>();
-//		bPointsTo.add("URLC");
 		ArrayList<String> pointsToC = new ArrayList<String>();
-//		cPointsTo.add("URLA");
 		ExampleDocument docA = new ExampleDocument("URLA", round(distRank), 2, pointsToA);
 		ExampleDocument docB = new ExampleDocument("URLB", round(distRank), 1, pointsToB);
 		ExampleDocument docC = new ExampleDocument("URLC", round(distRank), 1, pointsToC);
@@ -46,22 +39,11 @@ public class Rank {
 		pointsToA.add("URLC");
 		
 		ArrayList<ExampleDocument> collection = new ArrayList<ExampleDocument>();
-		collection.add(docA); collection.add(docB); collection.add(docC);
-		
-//		Map<String, Double> oldRanks = getRanks(collection);
-	
-		collectionRank(collection);
-		
-//		System.out.println("\nA: " + docA.getRank() + "\nB: " + docB.getRank() + "\nC: " + docC.getRank());
-
-		
-//		docRank(docA, docB, docC, oldA, oldB, oldC);
-		
-		
+		collection.add(docA); collection.add(docB); collection.add(docC);	
+		collectionRank(collection);	
 	}
 	
 	public static void collectionRank(ArrayList<ExampleDocument> collection){
-//		for(int i = 0; i < 20; i++){
 		double sum;
 		double oldRank;
 		boolean recurs = false;
@@ -96,10 +78,6 @@ public class Rank {
 			
 			doc.setRank(newRank);
 		}
-		
-//		System.out.println("\nA: " + collection.get(0).getRank() + "\nB: " + collection.get(1).getRank() + "\nC: " + collection.get(2).getRank());
-//		System.out.println("Continue?: " + recurs);
-//		}
 		
 		if(recurs){
 			collectionRank(collection);
@@ -157,7 +135,6 @@ public class Rank {
 		for(ExampleDocument doc: collection){
 			oldRanks.put(doc.getRandomURL(), doc.getRank());
 		}
-		
 		return oldRanks;
 	}
 }

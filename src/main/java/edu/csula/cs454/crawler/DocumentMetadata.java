@@ -13,6 +13,8 @@ public class DocumentMetadata {
 	private String path;
 	private String[] content;
 	private String ext;//file extension
+	private double pageRank;
+	
 	public String[] getContent() {
 		return content;
 	}
@@ -32,5 +34,13 @@ public class DocumentMetadata {
 	}
 	public void setFileExtestion(String extension) {
 		ext = extension;
+	}
+	
+	public double getPageRank(){
+		return pageRank;
+	}
+	
+	public void setPageRank(double rank){
+		pageRank = rank;
 	}
 }
