@@ -53,7 +53,7 @@ public class DataExtractor extends Thread implements Runnable {
 				docMetadata.setContent(doc.getContent());
 				docMetadata.setPath(doc.getPath());	
 				docMetadata.setFileExtestion(doc.getExtension());
-				docMetadata.setNumOutGoingLinks(doc.getNumOutGoingLinks());
+				docMetadata.setOutGoingLinks(doc.setOutGoingLinks());
 				dataStore.save(docMetadata);	
 			}			
 		}	

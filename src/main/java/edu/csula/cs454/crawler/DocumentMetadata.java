@@ -17,10 +17,23 @@ public class DocumentMetadata {
 	private String ext;//file extension
 	private double rank;//page rank of the document 
 	private int numLinksOut;
-	private ArrayList<String> links;
+	private ArrayList<String> linksToMe;
+	private ArrayList<String> outGoingLinks;
+	
+	public ArrayList<String> getOutGoingLinks(){
+		return outGoingLinks;
+	}
+	
+	public void setOutGoingLinks(ArrayList<String> links){
+		outGoingLinks = links;
+	}
 	
 	public String[] getContent() {
 		return content;
+	}
+	
+	public String getURL() {
+		return url;
 	}
 
 	public void setURL(String docURL) {
@@ -46,11 +59,11 @@ public class DocumentMetadata {
 		numLinksOut = num;
 	}
 	public void setLinksToThisDoc(ArrayList<String> links){
-		this.links = links;
+		this.linksToMe = links;
 	}	
 	public ArrayList<String> getLinksToThisDoc(){
 		
-		return links;
+		return linksToMe;
 	}	
 	public double getRank(){
 		return rank;

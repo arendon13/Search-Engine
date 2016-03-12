@@ -207,8 +207,8 @@ public class WebDocument {
 		}			
 	}
 
-	public int getNumOutGoingLinks() {
+	public ArrayList<String> setOutGoingLinks() {
 		// TODO implement correctly 
-		return 0;
+		return null;
 	}
 }
