@@ -1,6 +1,6 @@
 var ResultList = React.createClass({
   render: function() {
-    var resultNodes = this.props.data.map(function(result) {
+    var resultNodes = this.props.data['urls'].map(function(result) {
       return (
         <div>
           <h2 className="resultHeader"> {result.split('.')[1].charAt(0).toUpperCase() + result.split('.')[1].slice(1)} </h2>
@@ -10,6 +10,7 @@ var ResultList = React.createClass({
       });
     return (
       <div className="result">
+      <strong> TF-IDF : {this.props.data['tfIdf']} </strong> <br />
       {resultNodes}
       <strong> {resultNodes.length} Result(s) </strong>
       </div>
@@ -51,16 +52,15 @@ var SearchForm = React.createClass({
 
 var Results = React.createClass({
   getInitialState: function() {
-    return {urls : []};
+    return { data : {tdIdf: 0, urls : []}};
   },
   handleSearch: function(query){
-    console.log(query);
     $.ajax({
             url: this.props.url,
             type: 'get',
             data: { 'query' : query },
             success: function(data) {
-              this.setState({urls: data});
+              this.setState({data : {tfIdf : data.tfidf, urls: data.urls }});
             }.bind(this),
             error: function(xhr, status, err) {
               console.log('fail');
@@ -71,7 +71,7 @@ var Results = React.createClass({
     return(
       <div className="results">
         <SearchForm onSearch={this.handleSearch} />
-        <ResultList data={this.state.urls} />
+        <ResultList data={this.state.data} />
       </div>
       );
   }
