@@ -22,6 +22,10 @@ public class DocumentMetadata {
 	public String[] getContent() {
 		return content;
 	}
+	
+	public String getURL() {
+		return url;
+	}
 
 	public void setURL(String docURL) {
 		url = docURL;
