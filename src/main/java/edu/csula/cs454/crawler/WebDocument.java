@@ -12,6 +12,10 @@ import java.io.StringReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.standard.StandardFilter;
@@ -31,6 +35,8 @@ import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.xml.sax.SAXException;
 
 
@@ -57,8 +63,8 @@ public class WebDocument {
 	}
 	
 	public String getUrl(){
-		if(isHtml)return doc.location();
-		else return clean(response.url().toString()); 				
+		if(isHtml)return doc.location().toLowerCase().trim();
+		else return clean(response.url().toString().toLowerCase().trim()); 				
 	}
 	
 	private String clean(String dirtyUrl){
@@ -207,8 +213,19 @@ public class WebDocument {
 		}			
 	}
 
-	public ArrayList<String> setOutGoingLinks() {
-		// TODO implement correctly 
-		return null;
+	public ArrayList<String> getOutGoingLinks() {
+		if(!isHtml)return new ArrayList<String>();
+		Elements nextLinks = doc.select("a[href]"); // Select next links - add more restriction!
+		Set<String> linkSet = new HashSet<String>();
+        for( Element next : nextLinks ) // Iterate over all Links
+        {
+            String url = next.absUrl("href").toLowerCase().trim();
+            if(url.length() == 0 || url.equalsIgnoreCase(doc.location()))continue;
+            linkSet.add(url);
+        }
+        ArrayList<String> list = new ArrayList<String>();
+        for(String s: linkSet)list.add(s);
+        
+		return list;
 	}
 }

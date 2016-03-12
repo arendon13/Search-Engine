@@ -62,7 +62,6 @@ public class DocumentMetadata {
 		this.linksToMe = links;
 	}	
 	public ArrayList<String> getLinksToThisDoc(){
-		
 		return linksToMe;
 	}	
 	public double getRank(){

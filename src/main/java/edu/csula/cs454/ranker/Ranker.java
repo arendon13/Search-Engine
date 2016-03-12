@@ -22,10 +22,10 @@ public class Ranker {
         
         // `doc`s needs to be filled out with the URL and its own Document. check rank class for reference
         
-        collectionRank(documents, linkToMap, docs); 
+        collectionRank(ds, documents, linkToMap, docs); 
 	}
 	
-	private static void collectionRank(List<DocumentMetadata> collection,  Map<String, ArrayList<String>> linkToMap, Map<String, DocumentMetadata> docs){
+	private static void collectionRank(Datastore ds, List<DocumentMetadata> collection,  Map<String, ArrayList<String>> linkToMap, Map<String, DocumentMetadata> docs){
 		//TODO: adrian implement your link anaylis here 
 		double sum;
 		double oldRank;
@@ -34,7 +34,6 @@ public class Ranker {
 		for(DocumentMetadata doc: collection){
 			sum = 0.0;
 			oldRank = 0.0;
-			
 			for(String path: linkToMap.get(doc.getURL())){
 				DocumentMetadata v = docs.get(path);
 				oldRank = oldRanks.get(path);
@@ -52,11 +51,12 @@ public class Ranker {
 			}
 			
 			doc.setRank(newRank);
+			ds.save(doc);
 		}
 		System.out.println("A: " + collection.get(0).getRank() + "\nB: " + collection.get(1).getRank() + "\nC: " + collection.get(2).getRank());
 		
 		if(recurs){
-			collectionRank(collection,linkToMap,docs);
+			collectionRank(ds,collection,linkToMap,docs);
 		}
 		else{
 			System.out.println("\nRecursion finished. final converged result is: ");

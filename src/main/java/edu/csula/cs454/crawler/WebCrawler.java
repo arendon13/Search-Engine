@@ -50,6 +50,7 @@ public class WebCrawler {
 				}
 				//add document to list of documents crawled
 				docs.push(new WebDocument(doc));
+				/*
 				//TODO get all images on the page 
 				Elements images = doc.select("img");
 				System.out.println("Extracting Images...");
@@ -59,7 +60,7 @@ public class WebCrawler {
 					if(link.length() == 0)continue;
 					System.out.println("Extracting from: "+link);
 					crawlNonHtml(link);					
-				}
+				}*/
 				
 			} catch (IOException e) {
 				//if its not html or xml what is it
