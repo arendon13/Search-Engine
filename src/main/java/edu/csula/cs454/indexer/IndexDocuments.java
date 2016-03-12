@@ -34,7 +34,7 @@ public class IndexDocuments {
         for (DocumentMetadata doc : documents)
         {
         	//add intial page rank value for each document 
-        	doc.setPageRank(initPageRankScore);
+        	doc.setRank(initPageRankScore);
             for (String term : doc.getContent()) {
                 //Check if term exists in index
                 //if if does, then append class with new id

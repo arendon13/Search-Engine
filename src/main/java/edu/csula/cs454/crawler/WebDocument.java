@@ -206,4 +206,9 @@ public class WebDocument {
 				e.printStackTrace();
 		}			
 	}
+
+	public int getNumOutGoingLinks() {
+		// TODO implement correctly 
+		return 0;
+	}
 }
