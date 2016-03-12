@@ -11,8 +11,11 @@ public class DocumentMetadata {
 	@Id private ObjectId id;
 	private String url;
 	private String path;
-	private String ext;//file extension
 	private String[] content;
+	private String ext;//file extension
+	public String[] getContent() {
+		return content;
+	}
 
 	public void setURL(String docURL) {
 		url = docURL;
