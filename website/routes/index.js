@@ -8,17 +8,20 @@ module.exports = function(app){
 	});
 
 	app.get('/search', function(req, res) {
-		var urls = [];
+		var data = { tfidf : '',
+			urls :  []
+		};
 		var count = 0;
 		results = db.collection('Index').findOneAsync({ "term" : req.query.query})
 		 .then(function(results) {
+			 data.tfidf = results['tfIdf'];
 		 	for (var key in results['locations']){
 		 		count++;
 		 		location = db.collection('DocumentMetadata').findOne({"_id" : new oid(key)}, function(err, result){
-		 			urls.push(result['url'])
+		 			data.urls.push(result['url'])
 		 			count--;
 		 			if (count === 0){
-		 				res.send(urls);
+		 				res.send(data);
 		 			}
 		 		})
 		 	}
