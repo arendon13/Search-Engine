@@ -22,9 +22,9 @@ public class Rank {
 		ExampleDocument docA = new ExampleDocument("URLA", round(distRank), 2, pointsToA);
 		ExampleDocument docB = new ExampleDocument("URLB", round(distRank), 1, pointsToB);
 		ExampleDocument docC = new ExampleDocument("URLC", round(distRank), 1, pointsToC);
-		docs.put(docA.getRandomURL(), docA);
-		docs.put(docB.getRandomURL(), docB);
-		docs.put(docC.getRandomURL(), docC);
+		docs.put(docA.getURL(), docA);
+		docs.put(docB.getURL(), docB);
+		docs.put(docC.getURL(), docC);
 		
 		System.out.println("A: " + docA.getRank() + "\nB: " + docB.getRank() + "\nC: " + docC.getRank());
 		
@@ -47,30 +47,23 @@ public class Rank {
 		double sum;
 		double oldRank;
 		boolean recurs = false;
-		System.out.println("Before loop: " + recurs);
 		Map<String, Double> oldRanks = getRanks(collection);
 		for(ExampleDocument doc: collection){
-			System.out.print(doc.getRandomURL() + ": ");
 			sum = 0.0;
 			oldRank = 0.0;
 			
-			for(String path: doc.getPointsToDoc()){
+			for(String path: doc.getOutGoingLinks()){
 				ExampleDocument v = docs.get(path);
 				oldRank = oldRanks.get(path);
-				
-				System.out.print("(Current V: " + oldRank + "/" + v.getOutGoingLinks() + ")");
-				System.out.print("(Sum Before: " + sum + ") ");
-				System.out.print(path + " ");
-				sum += oldRank / v.getOutGoingLinks();
-				System.out.print("(Sum: " + sum + ") ");
+
+				sum += oldRank / v.getNumLinks();
+				System.out.println(oldRank + "/" + v.getNumLinks());
 			}
-			System.out.println("");
 			double newRank = round(sum);
 			
 			if(!recurs){
-				oldRank = oldRanks.get(doc.getRandomURL());
+				oldRank = oldRanks.get(doc.getURL());
 				double change = newRank - oldRank;
-				System.out.println(newRank + " - " + oldRank + " = " + change);
 				if(change != 0){
 					recurs = true;
 				}
@@ -78,6 +71,7 @@ public class Rank {
 			
 			doc.setRank(newRank);
 		}
+		System.out.println("A: " + collection.get(0).getRank() + "\nB: " + collection.get(1).getRank() + "\nC: " + collection.get(2).getRank());
 		
 		if(recurs){
 			collectionRank(collection);
@@ -100,9 +94,9 @@ public class Rank {
 		oldRankA = docA.getRank();
 		oldRankB = docB.getRank();
 		oldRankC = docC.getRank();
-		double newRankA = docC.getRank() / docC.getOutGoingLinks();
-		double newRankB = docA.getRank() / docA.getOutGoingLinks();
-		double newRankC = (docA.getRank() / docA.getOutGoingLinks()) + (docB.getRank() / docB.getOutGoingLinks());
+		double newRankA = docC.getRank() / docC.getOutGoingLinks().size();
+		double newRankB = docA.getRank() / docA.getOutGoingLinks().size();
+		double newRankC = (docA.getRank() / docA.getOutGoingLinks().size()) + (docB.getRank() / docB.getOutGoingLinks().size());
 		newRankA = round(newRankA);
 		newRankB = round(newRankB);
 		newRankC = round(newRankC);
@@ -133,7 +127,7 @@ public class Rank {
 	public static Map<String, Double> getRanks(ArrayList<ExampleDocument> collection){
 		Map<String, Double> oldRanks = new HashMap<String, Double>();
 		for(ExampleDocument doc: collection){
-			oldRanks.put(doc.getRandomURL(), doc.getRank());
+			oldRanks.put(doc.getURL(), doc.getRank());
 		}
 		return oldRanks;
 	}

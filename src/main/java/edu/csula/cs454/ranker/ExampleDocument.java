@@ -5,17 +5,17 @@ import java.util.ArrayList;
 public class ExampleDocument {
 	private double rank;
 	private int outGoingLinks;
-	private String randomURL;
+	private String getURL;
 	private ArrayList<String> pointsToDoc;
 	
 	public ExampleDocument(String randomURL, double rank, int outGoingLinks, ArrayList<String> pointsToDoc){
-		this.randomURL = randomURL;
+		this.getURL = randomURL;
 		this.rank = rank;
 		this.outGoingLinks = outGoingLinks;
 		this.pointsToDoc = pointsToDoc;
 	}
 
-	public ArrayList<String> getPointsToDoc() {
+	public ArrayList<String> getOutGoingLinks() {
 		return pointsToDoc;
 	}
 
@@ -23,26 +23,20 @@ public class ExampleDocument {
 		return rank;
 	}
 
-	public String getRandomURL() {
-		return randomURL;
+	public String getURL() {
+		return getURL;
 	}
 
-	public void setRandomURL(String randomURL) {
-		this.randomURL = randomURL;
+	public void setURL(String randomURL) {
+		this.getURL = randomURL;
 	}
 
 	public void setRank(double rank) {
 		this.rank = rank;
 	}
-
-	public int getOutGoingLinks() {
+	
+	public int getNumLinks(){
 		return outGoingLinks;
 	}
-
-	public void setOutGoingLinks(int outGoingLinks) {
-		this.outGoingLinks = outGoingLinks;
-	}
-	
-	
 
 }
