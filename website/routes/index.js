@@ -1,10 +1,15 @@
 var Promise = require('bluebird');
 var oid = require('mongodb').ObjectID;
+var path = require('path');
 
 module.exports = function(app){
 	var db = app.get('mongo');
 	app.get('/', function(req, res) {
 		res.sendFile(path.resolve('index.html'));
+	});
+
+	app.get('/img', function(req, res) {
+		res.sendFile(path.resolve('public/image.html'));
 	});
 
 	// app.get('/next', function(req, res) {
