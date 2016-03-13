@@ -8,3 +8,11 @@
 .tiny { 
 	    font-size: 6;
 		}
+
+.document {
+	color: #4885ed;
+}
+
+.image {
+	color: green;
+}
