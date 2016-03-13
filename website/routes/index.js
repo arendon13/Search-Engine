@@ -7,24 +7,75 @@ module.exports = function(app){
 		res.sendFile(path.resolve('index.html'));
 	});
 
+	// app.get('/next', function(req, res) {
+	// 	var data = [];
+	// 	var count = 0;
+	// 	results = db.collection('Index').findOneAsync({ "term" : req.query.query})
+	// 	 .then(function(results) {
+	// 	 	for (var key in results['locations']){
+
+	// 			count++;
+	// 			var ln = Object.keys(results['locations']).length;
+	// 			var tf = 0;
+	// 	 		location = db.collection('DocumentMetadata').findOne({"_id" : new oid(key)}, function(err, result){
+	// 				var e = entry();
+	// 	 			e.url = result['url']
+	// 	 			e.tfidf = (tf / ln );
+	// 				data.push(e);
+
+	// 	 			count--;
+
+	// 	 			if (count === 0){
+	// 	 				res.send(data);
+	// 	 			}
+
+	// 	 		})
+	// 	 	}
+	// 	 })
+	// });
+
 	app.get('/search', function(req, res) {
-		var data = { tfidf : '',
-			urls :  []
-		};
-		var count = 0;
+		var data = [];
 		results = db.collection('Index').findOneAsync({ "term" : req.query.query})
-		 .then(function(results) {
-			 data.tfidf = results['tfIdf'];
-		 	for (var key in results['locations']){
-		 		count++;
-		 		location = db.collection('DocumentMetadata').findOne({"_id" : new oid(key)}, function(err, result){
-		 			data.urls.push(result['url'])
-		 			count--;
-		 			if (count === 0){
-		 				res.send(data);
-		 			}
-		 		})
-		 	}
-		 })
-	});
+			.then(function(results){
+				if (results !== null){
+					var keys = Object.keys(results['locations'])
+					var length = keys.length;
+					Promise.map(keys, function(id){
+						return new Promise(function(resolve, reject){
+							location = db.collection('DocumentMetadata').findOneAsync({"_id" : new oid(id)})
+								.then(function(location){
+									data.push({ url: location['url'], tfidf: (results['locations'][id] / length) });
+									resolve();
+								})
+						})
+					})
+					.then(function(){
+					data.sort(function compare(a, b){
+						if (a.tfidf < b.tfidf){
+							return 1
+						}
+						if (a.tfidf > b.tfidf){
+							return -1
+						}
+						return 0
+					})
+					res.send(data);
+					// console.log(data);
+					// console.log('done');
+				})
+
+				} else {
+					res.send([]);
+				}
+			});
+	})
 }
+
+function entry() {
+	return {
+		tfidf : 0,
+		url: ''
+	};
+};
+

@@ -1,16 +1,16 @@
 var ResultList = React.createClass({
   render: function() {
-    var resultNodes = this.props.data['urls'].map(function(result) {
+    var resultNodes = this.props.data.map(function(result) {
       return (
         <div>
-          <h2 className="resultHeader"> {result.split('.')[1].charAt(0).toUpperCase() + result.split('.')[1].slice(1)} </h2>
-          <a className="result" href={result}> {result} </a>
+          <h2 className="resultHeader"> {result.url.split('.')[1].charAt(0).toUpperCase() + result.url.split('.')[1].slice(1)} </h2>
+          <a className="result" href={result.url}> {result.url} </a> <br />
+          <strong> TF-IDF: {result.tfidf} </strong>
         </div>
         );
       });
     return (
       <div className="result">
-      <strong> TF-IDF : {this.props.data['tfIdf']} </strong> <br />
       {resultNodes}
       <strong> {resultNodes.length} Result(s) </strong>
       </div>
@@ -52,7 +52,7 @@ var SearchForm = React.createClass({
 
 var Results = React.createClass({
   getInitialState: function() {
-    return { data : {tdIdf: 0, urls : []}};
+    return { data : []};
   },
   handleSearch: function(query){
     $.ajax({
@@ -60,7 +60,8 @@ var Results = React.createClass({
             type: 'get',
             data: { 'query' : query },
             success: function(data) {
-              this.setState({data : {tfIdf : data.tfidf, urls: data.urls }});
+              console.log(data);
+              this.setState({data : data});
             }.bind(this),
             error: function(xhr, status, err) {
               console.log('fail');
