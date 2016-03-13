@@ -35,6 +35,12 @@ module.exports = function(app){
 	// });
 
 	app.get('/search', function(req, res) {
+		console.log(typeof(req.query.query));
+		if (req.query.query.startsWith(':image')){
+			var term = req.query.query.split(" ");
+			var query = term[1];
+			console.log(query);
+		}
 		var data = [];
 		results = db.collection('Index').findOneAsync({ "term" : req.query.query})
 			.then(function(results){
