@@ -13,7 +13,10 @@ Promise.promisifyAll(collection.prototype);
 app.use(express.static(path.join(__dirname, 'public')));
 
 MongoClient.connect(url, function(err, database) {
-	if (err) throw err;
+	if (err) {
+		console.log('Something went wrong. Is MongoDB running?');
+		throw err;
+	}
 	app.set('mongo', database);
 	require('./routes')(app);
 	app.listen(3000, function(){
