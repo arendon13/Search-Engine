@@ -51,18 +51,6 @@ public class DocumentMetadata {
 	}
 	public void setFileExtestion(String extension) {
 		ext = extension;
-	}
-	public int  getNumOutGoingLinks(){
-		return numLinksOut;
-	}
-	public void setNumOutGoingLinks(int num){
-		numLinksOut = num;
-	}
-	public void setLinksToThisDoc(ArrayList<String> links){
-		this.linksToMe = links;
-	}	
-	public ArrayList<String> getLinksToThisDoc(){
-		return linksToMe;
 	}	
 	public double getRank(){
 		return rank;

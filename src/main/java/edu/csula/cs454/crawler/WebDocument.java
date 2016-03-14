@@ -81,6 +81,7 @@ public class WebDocument {
 		
 		  Tokenizer tokenizer = new StandardTokenizer(Version.LUCENE_36, new StringReader(content));
 		  CharArraySet stopSet = CharArraySet.copy(Version.LUCENE_36,StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+		  //TODO: maybe add some
 		  stopSet.add("for");
 		  stopSet.add("the");
 		  StandardFilter standardFilter = new StandardFilter(Version.LUCENE_36, tokenizer);
@@ -211,21 +212,5 @@ public class WebDocument {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 		}			
-	}
-
-	public ArrayList<String> getOutGoingLinks() {
-		if(!isHtml)return new ArrayList<String>();
-		Elements nextLinks = doc.select("a[href]"); // Select next links - add more restriction!
-		Set<String> linkSet = new HashSet<String>();
-        for( Element next : nextLinks ) // Iterate over all Links
-        {
-            String url = next.absUrl("href").toLowerCase().trim();
-            if(url.length() == 0 || url.equalsIgnoreCase(doc.location()))continue;
-            linkSet.add(url);
-        }
-        ArrayList<String> list = new ArrayList<String>();
-        for(String s: linkSet)list.add(s);
-        
-		return list;
 	}
 }
