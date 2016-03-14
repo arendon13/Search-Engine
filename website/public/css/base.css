@@ -16,3 +16,9 @@
 .image {
 	color: green;
 }
+
+.img-result {
+	width: 200px;
+	height: auto;
+	margin: 3px;
+}
