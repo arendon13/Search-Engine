@@ -75,6 +75,6 @@ var Results = React.createClass({
   }
 });
 ReactDOM.render(
-  <Results url='/img-search'/>,
+  <Results url='/search/image'/>,
   document.getElementById('content')
   );

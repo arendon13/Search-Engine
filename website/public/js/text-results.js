@@ -77,6 +77,6 @@ var Results = React.createClass({
   }
 });
 ReactDOM.render(
-  <Results url='/search'/>,
+  <Results url='/search/text'/>,
   document.getElementById('content')
   );
