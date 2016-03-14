@@ -11,7 +11,7 @@ module.exports = function(app){
 	});
 
 	app.get('/img', function(req, res) {
-		res.sendFile(path.resolve('../public/image.html'));
+		res.sendFile(path.resolve('public/image.html'));
 	});
 }
 
