@@ -25,11 +25,16 @@ public class DocumentMetadata {
 		
 	}
 
-	public DocumentMetadata(int idInt, double rank){
+	public DocumentMetadata(int idInt, double rank, String url){
 		this.idInt = idInt;
 		this.rank = rank;
+		this.url = url;
 	}
 	
+	public int getIdInt() {
+		return idInt;
+	}
+
 	public ArrayList<String> getOutGoingLinks(){
 		return outGoingLinks;
 	}
