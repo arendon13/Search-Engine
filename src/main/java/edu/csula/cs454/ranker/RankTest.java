@@ -25,21 +25,23 @@ public class RankTest {
 		
 		initializeRank(collection);
 		
-		ArrayList<String> outGoingLinksA = new ArrayList<String>();
-		outGoingLinksA.add("URLB"); outGoingLinksA.add("URLC");
-		ArrayList<String> outGoingLinksB = new ArrayList<String>();
-		outGoingLinksB.add("URLC");
-		ArrayList<String> outGoingLinksC = new ArrayList<String>();
-		outGoingLinksC.add("URLA");
-		
 		getLinksFromMe();
 		
-//		System.out.println(linksFromMe.get(1).size());
-//		System.out.println(linksFromMe.get(2).size());
-//		System.out.println(linksFromMe.get(3).size());
+//		System.out.println(linksFromMe.get(1).toString());
+//		System.out.println(linksFromMe.get(2).toString());
+//		System.out.println(linksFromMe.get(3).toString());
+	}
+	
+	public static void determineLinksToMe(){
+	    // iterate through outgoing and reverse link for incoming
 	}
 	
 	public static void getLinksFromMe(){
+		/*
+		 * Method will loop through each doc in the collection
+		 * Will receive the out going links per doc
+		 * Populate the hash map using the current doc and the list of links
+		 */
 		for(DocumentMetadata doc: collection){
 			ArrayList<String> outGoingLinks = getOutGoingLinks(doc);
 			populateLinksFromMe(doc, outGoingLinks);
@@ -47,7 +49,11 @@ public class RankTest {
 	}
 	
 	public static ArrayList<String> getOutGoingLinks(DocumentMetadata doc){
-		// Should be replaced with Benji's method
+		/*
+		 * Method returns a list of all the outgoing links pertaining to a document.
+		 * Hard coded for now.
+		 * Should be replaced with Benji's method
+		 */
 		ArrayList<String> outGoingLinks = new ArrayList<String>();
 
 		switch (doc.getIdInt()){
@@ -68,6 +74,11 @@ public class RankTest {
 	}
 	
 	public static void populateLinksFromMe(DocumentMetadata doc, ArrayList<String> outgoingLinks){
+		/*
+		 * Method implements the populating of the hash map
+		 * creates a hash set that will contain the id's of the doc that contains the out going link
+		 * puts all of this in the hash map 
+		 */
 		HashSet<Integer> hset = new HashSet<Integer>();
 		
 		for(String url: outgoingLinks){
@@ -79,6 +90,9 @@ public class RankTest {
 	}
 	
 	public static int getDocIdByUrl(String url){
+		/*
+		 * Based on the url/link given, method will return the doc id by iterating through the collection
+		 */
 		for(DocumentMetadata doc: collection){
 			if(doc.getURL().equals(url)){
 				return doc.getIdInt();
@@ -88,6 +102,9 @@ public class RankTest {
 	}
 	
 	public static void initializeRank(ArrayList<DocumentMetadata> collection){
+		/*
+		 * Method sets initial rank for all documents in the collection
+		 */
 		double initialRank = 1.0 / collection.size();
 		initialRank = round(initialRank);
 		
@@ -98,6 +115,9 @@ public class RankTest {
 	}
 	
 	public static double round(double x){
+		/*
+		 * Rounds to the nearest two decimals
+		 */
 		return Math.round(x * 100.0) / 100.0;
 	}
 
