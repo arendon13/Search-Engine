@@ -18,7 +18,8 @@ hs_err_pid*
 .settings/
 .DS_Store
 build/
-*.json
+dump.json
+*.log
 
 # Gradle
 .gradle/
@@ -27,3 +28,4 @@ build/
 /CrawlerStorge
 *.json
 *.iml
+*/node_modules/
