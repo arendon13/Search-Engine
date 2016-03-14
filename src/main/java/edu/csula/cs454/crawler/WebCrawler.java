@@ -40,7 +40,7 @@ public class WebCrawler {
 			try {
 				System.out.println(curDepth + ": Connecting to..." + i);
 				Document doc = Jsoup.connect(i).get();//connect the html page
-				System.out.println("Documnet Received! ");
+				System.out.println("Document Received! ");
 				//get all links on the page 
 				Elements elts = doc.select("a");
 				for(int j = 0, length = elts.size(); j < length; j++)

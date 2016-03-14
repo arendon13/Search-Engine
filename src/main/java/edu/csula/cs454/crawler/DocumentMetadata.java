@@ -17,8 +17,18 @@ public class DocumentMetadata {
 	private String ext;//file extension
 	private double rank;//page rank of the document 
 	private int numLinksOut;
-	private ArrayList<String> linksToMe;
+	private ArrayList<Integer> linksToMe;
 	private ArrayList<String> outGoingLinks;
+	private int idInt;
+	
+	public DocumentMetadata(){
+		
+	}
+
+	public DocumentMetadata(int idInt, double rank){
+		this.idInt = idInt;
+		this.rank = rank;
+	}
 	
 	public ArrayList<String> getOutGoingLinks(){
 		return outGoingLinks;
