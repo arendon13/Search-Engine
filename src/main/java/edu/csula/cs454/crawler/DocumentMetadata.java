@@ -69,4 +69,8 @@ public class DocumentMetadata {
 	public void setRank(double rank){
 		this.rank = rank;
 	}
+
+	public String getPath() {
+		return path;
+	}
 }

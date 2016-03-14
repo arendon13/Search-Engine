@@ -2,11 +2,9 @@ var ResultList = React.createClass({
   render: function() {
     var resultNodes = this.props.data.map(function(result) {
       return (
-        <div>
-          <h2 className="resultHeader"> {result.url.split('.')[1].charAt(0).toUpperCase() + result.url.split('.')[1].slice(1)} </h2>
-          <a className="result" href={result.url}> {result.url} </a> <br />
-          <strong> TF-IDF: {result.tfidf} </strong>
-        </div>
+					<a href={result.url}>
+						<img className='img-result' src={result.url} />
+					</a>
         );
       });
     return (
@@ -29,7 +27,6 @@ var SearchForm = React.createClass({
     e.preventDefault();
     var query = this.state.query.trim();
     this.props.onSearch(query);
-    this.setState({query: ''});
   },
   render: function(){
     return (
@@ -78,6 +75,6 @@ var Results = React.createClass({
   }
 });
 ReactDOM.render(
-  <Results url='/search'/>,
+  <Results url='/img-search'/>,
   document.getElementById('content')
   );
