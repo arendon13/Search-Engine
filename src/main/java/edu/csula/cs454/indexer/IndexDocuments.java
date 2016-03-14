@@ -1,5 +1,6 @@
 package edu.csula.cs454.indexer;
 
+import com.clarifai.api.ClarifaiClient;
 import com.mongodb.MongoClient;
 import edu.csula.cs454.crawler.DocumentMetadata;
 import org.bson.types.ObjectId;
@@ -19,11 +20,20 @@ public class IndexDocuments {
     public static void main(String args[]){
         final Morphia morphia = new Morphia();
         final Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
+        String APP_ID = "";
+        String APP_SECRET = "";
         ds.delete(ds.createQuery(Index.class));
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
         int totalDocs = (int) documents.countAll();
+        ClarifaiClient clarifai = new ClarifaiClient(APP_ID, APP_SECRET);
+        ArrayList<String> images = new ArrayList<String>();
+
 
         for (DocumentMetadata doc : documents){
+            if (doc.getContent().length == 0){
+                images.add(doc.getPath());
+                System.out.println(doc.getPath());
+            }
             for (String term : doc.getContent()) {
                 //Check if term exists in index
                 //if if does, then append class with new id
