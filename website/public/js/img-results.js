@@ -27,7 +27,6 @@ var SearchForm = React.createClass({
     e.preventDefault();
     var query = this.state.query.trim();
     this.props.onSearch(query);
-    this.setState({query: ''});
   },
   render: function(){
     return (
