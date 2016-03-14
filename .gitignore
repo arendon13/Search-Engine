@@ -16,6 +16,7 @@ hs_err_pid*
 .classpath
 .project
 .settings/
+.DS_Store
 build/
 dump.json
 *.log
@@ -24,7 +25,7 @@ dump.json
 .gradle/
 /bin/
 
-/CrawlerStorage
+/CrawlerStorge
+*.json
 *.iml
-
 */node_modules/

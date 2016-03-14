@@ -39,10 +39,10 @@ public class IndexDocuments {
             }
         }
         System.out.println("Done indexing, calculating tf-idf");
-        calculateTfIdf(ds, totalDocs);
+        //calculateTfIdf(ds, totalDocs);
     }
 
-    private static void calculateTfIdf(Datastore ds, int totalDocs) {
+   /* private static void calculateTfIdf(Datastore ds, int totalDocs) {
         double tfIdf;
         for (Index term : ds.find(Index.class)){
             tfIdf = Math.log10(totalDocs / term.docCount());
@@ -50,7 +50,7 @@ public class IndexDocuments {
             term.setTfIdf(tfIdf);
             ds.save(term);
         }
-    }
+    }*/
 
     public static boolean termExistsInIndex(Datastore ds, String term, ObjectId location){
         boolean existence = false;
