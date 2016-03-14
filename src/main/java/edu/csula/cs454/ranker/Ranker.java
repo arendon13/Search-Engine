@@ -16,7 +16,7 @@ import edu.csula.cs454.indexer.Index;
 
 public class Ranker {
 
-	public static void rankAllDocuments(Datastore ds,  Map<String, ArrayList<String>> linkToMap, Map<String, DocumentMetadata> docs ){
+	/*public static void rankAllDocuments(Datastore ds,  Map<String, ArrayList<String>> linkToMap, Map<String, DocumentMetadata> docs ){
 		
         List<DocumentMetadata> documents = ds.find(DocumentMetadata.class).asList();
         
@@ -75,5 +75,5 @@ public class Ranker {
 			oldRanks.put(doc.getURL(), doc.getRank());
 		}
 		return oldRanks;
-	}
+	}*/
 }
