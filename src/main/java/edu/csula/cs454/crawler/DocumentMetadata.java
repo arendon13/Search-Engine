@@ -1,4 +1,6 @@
 package edu.csula.cs454.crawler;
+import java.util.ArrayList;
+
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Id;
@@ -11,12 +13,28 @@ public class DocumentMetadata {
 	@Id private ObjectId id;
 	private String url;
 	private String path;
-
+	private String[] content;
+	private String ext;//file extension
+	private double rank;//page rank of the document 
+	private int numLinksOut;
+	private ArrayList<String> linksToMe;
+	private ArrayList<String> outGoingLinks;
+	
+	public ArrayList<String> getOutGoingLinks(){
+		return outGoingLinks;
+	}
+	
+	public void setOutGoingLinks(ArrayList<String> links){
+		outGoingLinks = links;
+	}
+	
 	public String[] getContent() {
 		return content;
 	}
-
-	private String[] content;
+	
+	public String getURL() {
+		return url;
+	}
 
 	public void setURL(String docURL) {
 		url = docURL;
@@ -30,5 +48,27 @@ public class DocumentMetadata {
 	}
 	public void setContent(String[] content) {
 		this.content = content;		
+	}
+	public void setFileExtestion(String extension) {
+		ext = extension;
+	}
+	public int  getNumOutGoingLinks(){
+		return numLinksOut;
+	}
+	public void setNumOutGoingLinks(int num){
+		numLinksOut = num;
+	}
+	public void setLinksToThisDoc(ArrayList<String> links){
+		this.linksToMe = links;
+	}	
+	public ArrayList<String> getLinksToThisDoc(){
+		return linksToMe;
+	}	
+	public double getRank(){
+		return rank;
+	}
+	
+	public void setRank(double rank){
+		this.rank = rank;
 	}
 }

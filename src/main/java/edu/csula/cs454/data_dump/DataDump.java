@@ -11,7 +11,7 @@ import java.io.IOException;
 import static com.mongodb.client.model.Projections.*;
 
 public class DataDump {
-
+	
 	private static MongoDatabase db;
 	private static MongoClient mongo;
 	private static MongoCollection collection;

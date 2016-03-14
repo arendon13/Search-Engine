@@ -2,6 +2,8 @@ package edu.csula.cs454.indexer;
 
 import com.mongodb.MongoClient;
 import edu.csula.cs454.crawler.DocumentMetadata;
+import edu.csula.cs454.ranker.Ranker;
+
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.Datastore;
@@ -18,13 +20,39 @@ import java.util.Map;
 public class IndexDocuments {
     public static void main(String args[]){
         final Morphia morphia = new Morphia();
+        morphia.map(DocumentMetadata.class);
+        morphia.map(Index.class);
         final Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
+        //delete current index table
         ds.delete(ds.createQuery(Index.class));
+        //get all document
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
         int totalDocs = (int) documents.countAll();
-
-        for (DocumentMetadata doc : documents){
-            for (String term : doc.getContent()) {
+        double initPageRankScore = 1.0/totalDocs;
+        //create a hash  for getting the links that point to a specific doc 
+        Map<String, ArrayList<String>> linkToMap = new HashMap<String, ArrayList<String>>();
+        Map<String, DocumentMetadata> docs = new HashMap<String, DocumentMetadata>();
+        //Start indexing!! :D
+        for (DocumentMetadata doc : documents)
+        {
+        	//add to list of docs
+        	docs.put(doc.getURL(), doc);
+        	//add intial page rank value for each document 
+        	doc.setRank(initPageRankScore);
+        	ArrayList<String> outlinks = doc.getOutGoingLinks();
+        	for(String link: outlinks)
+        	{
+        		ArrayList<String> links = linkToMap.get(link);
+        		if(links == null)
+        		{
+        			links = new ArrayList<String>();
+        			linkToMap.put(link,links);
+        		}
+        		
+        		links.add(doc.getURL());        		
+        	}
+        	
+            for (String term : doc.getContent()){
                 //Check if term exists in index
                 //if if does, then append class with new id
                 // otherwise, create new class and add to db
@@ -37,12 +65,17 @@ public class IndexDocuments {
                     ds.save(newTerm);
                 }
             }
+            ds.save(doc);
         }
-        System.out.println("Done indexing, calculating tf-idf");
-        calculateTfIdf(ds, totalDocs);
+        System.out.println("Done indexing!");
+        //memory clean up
+        documents = null;
+        
+        System.out.println("Let the ranking begin!!");
+        Ranker.rankAllDocuments(ds, linkToMap, docs);      	
     }
 
-    private static void calculateTfIdf(Datastore ds, int totalDocs) {
+   /* private static void calculateTfIdf(Datastore ds, int totalDocs) {
         double tfIdf;
         for (Index term : ds.find(Index.class)){
             tfIdf = Math.log10(totalDocs / term.docCount());
@@ -50,7 +83,7 @@ public class IndexDocuments {
             term.setTfIdf(tfIdf);
             ds.save(term);
         }
-    }
+    }*/
 
     public static boolean termExistsInIndex(Datastore ds, String term, ObjectId location){
         boolean existence = false;
