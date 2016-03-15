@@ -1,9 +1,13 @@
+var capitalize = function(word){
+  return word.split('.')[1].charAt(0).toUpperCase() + word.split('.')[1].slice(1)
+}
+
 var ResultList = React.createClass({
   render: function() {
-    var resultNodes = this.props.data.map(function(result) {
+    var resultNodes = this.props.data.map(function(result, i) {
       return (
-        <div>
-          <h2 className="resultHeader"> {result.url.split('.')[1].charAt(0).toUpperCase() + result.url.split('.')[1].slice(1)} </h2>
+        <div key={i}>
+          <h2 className="resultHeader"> {capitalize(result.url)} </h2>
           <a className="result" href={result.url}> {result.url} </a> <br />
           <strong> TF-IDF: {result.tfidf} </strong>
         </div>

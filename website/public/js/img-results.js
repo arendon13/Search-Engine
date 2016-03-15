@@ -1,8 +1,8 @@
 var ResultList = React.createClass({
   render: function() {
-    var resultNodes = this.props.data.map(function(result) {
+    var resultNodes = this.props.data.map(function(result, i) {
       return (
-					<a href={result.url}>
+					<a href={result.url} key={i}>
 						<img className='img-result' src={result.url} />
 					</a>
         );
