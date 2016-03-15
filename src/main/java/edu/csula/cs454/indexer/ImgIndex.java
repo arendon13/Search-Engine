@@ -10,28 +10,29 @@ import java.util.Map;
 @Entity
 public class ImgIndex {
     @Id private ObjectId id;
-    private String term;
+    private String tag;
     private Map<ObjectId, Double> locations;
 
-    public String getTerm() {
-        return term;
+
+    public String getTag() {
+        return tag;
     }
 
-    public void setTerm(String term) {
-        this.term = term;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
-    public Map<ObjectId, Double> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(Map<ObjectId, Double> locations) {
-        this.locations = locations;
-    }
-
+    /** Layer of obfuscation for adding a location.
+     * @param id: (ObjectId) DocumentId of the Image
+     * @param prob: (Double) Probability that the tag is correct.
+     */
     public void addLocation(ObjectId id, Double prob){
         if (!locations.containsKey(id)){
             locations.put(id, prob);
         }
+    }
+
+    public void setLocations(Map<ObjectId,Double> locations) {
+        this.locations = locations;
     }
 }
