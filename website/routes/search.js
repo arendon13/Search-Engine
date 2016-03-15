@@ -7,7 +7,7 @@ module.exports = function(app){
 
 	app.get('/search/image', function(req, res) {
 		var data = [];
-		results = db.collection('ImgIndex').findOneAsync({ "tag" : req.query.query})
+		results = db.collection('ImgIndex').findOneAsync({ "tag" : req.query.query.toLowerCase()})
 			.then(function(results){
 				if (results !== null){
 
@@ -17,8 +17,13 @@ module.exports = function(app){
 						return new Promise(function(resolve, reject){
 							location = db.collection('DocumentMetadata').findOneAsync({"_id" : new oid(id)})
 								.then(function(location){
-									path = location['path'].split('/')[1];
-									data.push({ url: 'images/' + path, prob: results['locations'][id] });
+									raw_path = location['path'].split('/')[1];
+									data.push({ 
+										path: 'images/' + raw_path,
+										prob: results['locations'][id],
+										ext: location['ext'],
+										url: location['url']
+								 	});
 									resolve();
 								})
 						})
@@ -35,7 +40,7 @@ module.exports = function(app){
 
 	app.get('/search/text', function(req, res) {
 		var data = [];
-		results = db.collection('Index').findOneAsync({ "term" : req.query.query})
+		results = db.collection('Index').findOneAsync({ "term" : req.query.query.toLowerCase()})
 			.then(function(results){
 				if (results !== null){
 
