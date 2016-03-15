@@ -10,7 +10,8 @@ var Promise = require('bluebird');
 Promise.promisifyAll(MongoClient);
 Promise.promisifyAll(collection.prototype);
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/public'));
+app.use('/images', express.static(__dirname + '/../CrawlerStorage'));
 
 MongoClient.connect(url, function(err, database) {
 

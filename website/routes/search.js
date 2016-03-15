@@ -17,7 +17,9 @@ module.exports = function(app){
 						return new Promise(function(resolve, reject){
 							location = db.collection('DocumentMetadata').findOneAsync({"_id" : new oid(id)})
 								.then(function(location){
-									data.push({ url: location['url'], prob: results['locations'][id] });
+									console.log(location);
+									path = location['path'].split('/')[1];
+									data.push({ url: 'images/' + path, prob: results['locations'][id] });
 									resolve();
 								})
 						})
