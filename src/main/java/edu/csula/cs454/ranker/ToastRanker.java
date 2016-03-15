@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20,6 +21,7 @@ public class ToastRanker {
 	HashMap <String, HashSet<String>> incoming;
 	HashMap <String, Double> allRanks;
 	HashMap <String, DocumentMetadata> allDocuments;
+	//double maxRank = 0;
 	
 	public ToastRanker(){
 		outgoing = new HashMap<String, HashSet<String>>();
@@ -29,21 +31,30 @@ public class ToastRanker {
 	}
 	
 	public void addDocument(DocumentMetadata doc) {
-		try{
+		
 			String linkId = doc.getURL();
 			allRanks.put(linkId, new Double(doc.getRank()));
 			allDocuments.put(linkId, doc);
 			//calculate the outgoing links of this page
-			File input = new File(doc.getPath());
-			Document currentDocument = Jsoup.parse(input, "UTF-8",doc.getURL());
-			Elements linkElements = currentDocument.select("a");
 			HashSet<String> outLinks = new HashSet<String>();
 			outgoing.put(linkId, outLinks);
-			for(int i = 0, length = linkElements.size(); i < length; i++)
+			if(doc.isHtml())
 			{
-				String link = linkElements.get(i).absUrl("href").toLowerCase().trim();
-				if(link.length() == 0)continue;
-				outLinks.add(link);
+				try{
+					File input = new File(doc.getPath());
+					Document currentDocument = Jsoup.parse(input, "UTF-8",doc.getURL());
+					Elements linkElements = currentDocument.select("a");
+					for(int i = 0, length = linkElements.size(); i < length; i++)
+					{
+						String link = linkElements.get(i).absUrl("href").toLowerCase().trim();
+						if(link.length() == 0)continue;
+						//System.out.println("Link Added : "+link);
+						outLinks.add(link);
+					}
+					
+				}catch(Exception e){
+					e.printStackTrace();
+				}			
 			}
 			//for each link use as a key and store this documents key 
 			for(String link: outLinks)
@@ -56,14 +67,11 @@ public class ToastRanker {
 				}
 				inLinks.add(linkId);
 			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 
 	public DocumentMetadata[] rankDocumentsUsingSecretToastMethod() {
 		// TODO link analysis ranking should be done here
-		double sum;
+		/*double sum;
 		double oldRank;
 		boolean recurs = false;
 		
@@ -108,13 +116,102 @@ public class ToastRanker {
 			//it can be saved to the db
 			DocumentMetadata[] array = getFinalArray();
 			return array;
+		}*/
+		//initialize the rank for the documents 
+		/*
+		 * It only makes sense to rank the html documents
+		 * */
+		int count  = 0;
+		for(Entry<String,DocumentMetadata> d: allDocuments.entrySet())
+		{
+			count++;
 		}
-		
-		// benji, double check this eclipse made me add this return statement
-		return null;
+		//maxRank = 1.0/count;
+		double initRank = 1.0/count;
+		System.out.print("initial Rank: "+initRank+" html collection Size: "+ count);
+		//initialize rank!! :P
+		for(Entry<String,DocumentMetadata> d: allDocuments.entrySet())
+		{
+			//DocumentMetadata doc = d.getValue();
+			//doc.setRank(initRank);
+			allRanks.put(d.getKey(),new Double(initRank));
+			//d.getValue().setRank(initRank);
+			
+		}		
+		rankAllDocs();
+		//return that documents as an array so they can be saved to the database 
+		int size = allDocuments.size();
+		DocumentMetadata[] array = new DocumentMetadata[size];
+		int index = 0;
+		for(Entry<String,DocumentMetadata> d: allDocuments.entrySet())
+		{
+			array[index] = d.getValue();
+			index++;
+		}
+		return array;
 	}
 	
-	public DocumentMetadata[] getFinalArray(){
+	
+	public void rankAllDocs(){
+		boolean notDoneRanking = true;
+		//rank documents
+		int counter = 0;
+	
+		while(counter < 3)
+		{
+			for(Entry<String,DocumentMetadata> d: allDocuments.entrySet())
+			{
+				DocumentMetadata doc = d.getValue(); 
+				/*if(doc.isHtml())*/rankDoc(doc);
+			}
+			counter++;
+		}
+		
+		//copy new ranks into documents
+		for(Entry<String,DocumentMetadata> d: allDocuments.entrySet())
+		{
+			DocumentMetadata doc = d.getValue();
+			doc.setRank(allRanks.get(d.getKey()).doubleValue());
+		}
+	}
+	
+	public void rankDoc(DocumentMetadata doc){
+		String url  = doc.getURL();
+		allRanks.put(url,getRank(url));		
+	}
+	
+	public Double getRank(String url){
+		HashSet<String> linksToThisURL = incoming.get(url);
+		//HashSet<String> linksFromThisURL = outgoing.get(url);
+		/*must becarefull with this because either sets may be of size 0;
+		 * or null if not link points to it (ex. seed with nothing refing it )
+		 * */
+		if(linksToThisURL ==null ||linksToThisURL.isEmpty())return allRanks.get(url);
+		double newRank = 0.0;
+		for(String link: linksToThisURL)
+		{
+			Double currentRank = allRanks.get(link);
+			/*check to see if this is a document that has been crawled
+			if it isn't we can counted because we don't know the number 
+			of out going links it has*/
+			if(currentRank == null )continue;
+			//if the docuement doens't have out going links dissregard calculation
+			HashSet<String> linksFromURL = outgoing.get(link);
+			if(linksFromURL == null || linksFromURL.isEmpty())continue;
+			newRank+= (currentRank.doubleValue()/linksFromURL.size());
+			//System.out.print("Calculating New Rank");
+		}
+		
+		if(newRank == 0.0)return allRanks.get(url);
+		else{
+			//check against max
+			//if(newRank > maxRank)maxRank = newRank;
+		}
+		 	
+		return new Double(newRank);
+	}
+	
+	/*public DocumentMetadata[] getFinalArray(){
 		int size = allDocuments.size();
 		DocumentMetadata[] array = new DocumentMetadata[size];
 		
@@ -125,9 +222,9 @@ public class ToastRanker {
 		}
 		
 		return array;
-	}
+	}*/
 	
-	public DocumentMetadata[] getIncomingDocs(DocumentMetadata curDoc){
+	/*public DocumentMetadata[] getIncomingDocs(DocumentMetadata curDoc){
 		int size = incoming.get(curDoc.getURL()).size();
 		DocumentMetadata[] doc = new DocumentMetadata[size];
 		
@@ -135,13 +232,10 @@ public class ToastRanker {
 			doc[i] = allDocuments.get(incoming.get(curDoc.getURL()).toArray()[i]);
 		}
 		
-		return null;
-	}
-	
-	public Map<String, Double> getRanks(HashMap <String, DocumentMetadata> allDocs){
-		/*
-		 * Returns a map 
-		 */
+		return doc;
+	}*/	
+	/*public Map<String, Double> getRanks(HashMap <String, DocumentMetadata> allDocs){
+		// Returns a map 
 		Map<String, Double> oldRanks = new HashMap<String, Double>();
 		for (Entry<String, DocumentMetadata> entry : allDocs.entrySet()) {
 		    DocumentMetadata value = entry.getValue();
@@ -152,10 +246,8 @@ public class ToastRanker {
 	}
 	
 	public double round(double x){
-		/*
-		 * Rounds to the nearest two decimals
-		 */
+		// Rounds to the nearest two decimals
 		return Math.round(x * 100.0) / 100.0;
-	}
+	}*/
 
 }

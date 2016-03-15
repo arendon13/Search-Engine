@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by esauceda on 2/26/16.
  */
 public class IndexDocuments {
-    public static void main(String args[]){
+	public static void main(String args[]){
         final Morphia morphia = new Morphia();
         morphia.map(Index.class);
         morphia.map(DocumentMetadata.class);        
@@ -26,12 +26,12 @@ public class IndexDocuments {
         ds.delete(ds.createQuery(Index.class));
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
         int totalDocs = (int) documents.countAll();
-        double initialRank = 1.0/totalDocs;
         ToastRanker ranker = new ToastRanker();
-        for (DocumentMetadata doc : documents){
-        	doc.setRank(initialRank); 
+        for (DocumentMetadata doc : documents)
+        {
         	ranker.addDocument(doc);
-            for (String term : doc.getContent()) {
+            for (String term : doc.getContent()) 
+            {
                 //Check if term exists in index
                 //if if does, then append class with new id
                 // otherwise, create new class and add to db
@@ -44,27 +44,27 @@ public class IndexDocuments {
                     ds.save(newTerm);
                 }
             }
-            //save rank for the document
-            ds.save(doc);
         }
         System.out.println("Done indexing");
         System.out.println("Let the ranking begin!!!!");
-        ranker.rankDocumentsUsingSecretToastMethod();
+        DocumentMetadata[] rankedDocs = ranker.rankDocumentsUsingSecretToastMethod();
+        for(DocumentMetadata d:  rankedDocs )
+        {
+        	ds.save(d);
+        }
         System.out.print("Ranking is complete!!");
         //calculateTfIdf(ds, totalDocs);
     }
 
-   /* private static void calculateTfIdf(Datastore ds, int totalDocs) {
-        double tfIdf;
-        for (Index term : ds.find(Index.class)){
-            tfIdf = Math.log10(totalDocs / term.docCount());
-            //System.out.println(term.getTerm() + " TF-IDF: " + tfIdf);
-            term.setTfIdf(tfIdf);
-            ds.save(term);
-        }
-    }*/
+	/*
+	 * private static void calculateTfIdf(Datastore ds, int totalDocs) { double
+	 * tfIdf; for (Index term : ds.find(Index.class)){ tfIdf =
+	 * Math.log10(totalDocs / term.docCount());
+	 * //System.out.println(term.getTerm() + " TF-IDF: " + tfIdf);
+	 * term.setTfIdf(tfIdf); ds.save(term); } }
+	 */
 
-    public static boolean termExistsInIndex(Datastore ds, String term, ObjectId location){
+	public static boolean termExistsInIndex(Datastore ds, String term, ObjectId location){
         boolean existence = false;
         Query<Index> query = ds.find(Index.class, "term ==", term);
         if (query.asList().size() > 0){
