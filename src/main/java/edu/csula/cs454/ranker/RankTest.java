@@ -3,6 +3,9 @@ package edu.csula.cs454.ranker;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import edu.csula.cs454.crawler.DocumentMetadata;
 
@@ -11,11 +14,10 @@ import edu.csula.cs454.crawler.DocumentMetadata;
 public class RankTest {
 	
 	static HashMap<Integer, HashSet<Integer>> linksFromMe = new HashMap<Integer, HashSet<Integer>>();
-	static HashMap<Integer, HashSet<Integer>> linkToMe = new HashMap<Integer, HashSet<Integer>>();
+	static HashMap<Integer, HashSet<Integer>> linksToMe = new HashMap<Integer, HashSet<Integer>>();
 	static ArrayList<DocumentMetadata> collection;
 
 	public static void main(String[] args) {
-		ArrayList<Integer> empty = new ArrayList<Integer>();
 		DocumentMetadata docA = new DocumentMetadata(1, 0.0, "URLA");
 		DocumentMetadata docB = new DocumentMetadata(2, 0.0, "URLB");
 		DocumentMetadata docC = new DocumentMetadata(3, 0.0, "URLC");
@@ -27,13 +29,49 @@ public class RankTest {
 		
 		getLinksFromMe();
 		
-//		System.out.println(linksFromMe.get(1).toString());
-//		System.out.println(linksFromMe.get(2).toString());
-//		System.out.println(linksFromMe.get(3).toString());
+		determineLinksToMe();
+		
+		System.out.println(linksFromMe.toString());
+		System.out.println(linksToMe.toString());
 	}
 	
 	public static void determineLinksToMe(){
-	    // iterate through outgoing and reverse link for incoming
+	    /*
+	     *  iterate through outgoing and reverse link for incoming
+	     *  keys and values for out going links need to be switched when getting incoming links
+	     */
+		HashSet<Integer> value;
+		HashSet<Integer> hset; // used to insert into map
+		
+		for (Entry<Integer, HashSet<Integer>> entry : linksFromMe.entrySet()) {
+		    int key = entry.getKey();
+		    value = entry.getValue();
+		    for(int i = 0; i < value.toArray().length; i++){
+		    	hset = new HashSet<Integer>();
+		    	hset.add(key);
+		    	int curValue = (int) value.toArray()[i];
+		    	if(linksToMe.keySet().contains(curValue)){
+					linksToMe.get(curValue).add(key);
+				}
+				else{
+					linksToMe.put(curValue, hset);
+				}
+		    }
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static void printHashMap(HashMap<Integer, HashSet<Integer>> hm){		
+	    /*
+	     *  Method for printing maps
+	     *  Taken and modified from StackOverflow
+	     */
+		Iterator<Entry<Integer, HashSet<Integer>>> it = hm.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        System.out.println(pair.getKey() + " = " + pair.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
 	}
 	
 	public static void getLinksFromMe(){
