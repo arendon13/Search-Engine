@@ -80,7 +80,7 @@ public class WebDocument {
 	private String[] extractMeaningfulContent(String content){
 		
 		  Tokenizer tokenizer = new StandardTokenizer(Version.LUCENE_36, new StringReader(content));
-		  CharArraySet stopSet = CharArraySet.copy(Version.LUCENE_36,StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+		  CharArraySet stopSet = CharArraySet.copy(Version.LUCENE_36, StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 		  //TODO: maybe add some
 		  stopSet.add("for");
 		  stopSet.add("the");

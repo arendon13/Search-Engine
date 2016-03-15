@@ -1,9 +1,13 @@
+var capitalize = function(word){
+  return word.split('.')[1].charAt(0).toUpperCase() + word.split('.')[1].slice(1)
+}
+
 var ResultList = React.createClass({
   render: function() {
-    var resultNodes = this.props.data.map(function(result) {
+    var resultNodes = this.props.data.map(function(result, i) {
       return (
-        <div>
-          <h2 className="resultHeader"> {result.url.split('.')[1].charAt(0).toUpperCase() + result.url.split('.')[1].slice(1)} </h2>
+        <div key={i}>
+          <h2 className="resultHeader"> {capitalize(result.url)} </h2>
           <a className="result" href={result.url}> {result.url} </a> <br />
           <strong> TF-IDF: {result.tfidf} </strong>
         </div>
@@ -29,21 +33,22 @@ var SearchForm = React.createClass({
     e.preventDefault();
     var query = this.state.query.trim();
     this.props.onSearch(query);
-    this.setState({query: ''});
   },
   render: function(){
     return (
       <form className="searchForm" onSubmit={this.handleSubmit} >
         <div className='form-group'>
-        <input 
-         type='text' 
-         className='form-control' 
-         name="query"
-         value={this.state.query}
-         onChange={this.handleQueryChange} />
-        </div>
-        <div className='form-group text-center'>
-        <input type='submit' className='btn btn-primary' value='Search' />
+          <div className='input-group'>
+            <input 
+              type='text' 
+              className='form-control' 
+              name="query"
+              value={this.state.query}
+              onChange={this.handleQueryChange} />
+            <span className="input-group-btn">
+              <input type='submit' className='btn btn-primary' value='Search' />
+            </span>
+          </div>
         </div>
       </form>
       )  
@@ -78,6 +83,6 @@ var Results = React.createClass({
   }
 });
 ReactDOM.render(
-  <Results url='/search'/>,
+  <Results url='/search/text'/>,
   document.getElementById('content')
   );

@@ -1,3 +1,10 @@
+body {
+	background: #FBFBFB;
+}
+a {
+	color: white;
+	text-decoration: none;
+}
 .resultHeader {
 	color: #4885ed;
 }
@@ -8,3 +15,42 @@
 .tiny { 
 	    font-size: 6;
 		}
+
+.document {
+	background: #4885ed;
+}
+
+.image {
+	background: #4CAF50;
+}
+
+.img-result {
+	border-radius: 25px;
+	width: 350px;
+	height: auto;
+	margin: 3px;
+}
+.img-details {
+	border-radius: 5px;
+	background: #464545;
+	color: white;
+	padding: 10px;
+}
+.custom-thumbnail {
+	border: black;
+	border-width: 3px;
+	border-style: solid;
+}
+.header {
+	text-align: center;
+	font-family: "Roboto Mono";
+	padding: 15px;
+	margin: 0px
+}
+.pop {
+	color: white
+}
+
+.btn-custom {
+	background: #25314C
+}
