@@ -7,7 +7,7 @@ module.exports = function(app){
 	var search = require('./search.js')(app);
 
 	app.get('/', function(req, res) {
-		res.sendFile(path.resolve('index.html'));
+		res.sendFile(path.resolve('public/index.html'));
 	});
 
 	app.get('/img', function(req, res) {
