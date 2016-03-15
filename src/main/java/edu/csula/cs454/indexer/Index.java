@@ -12,19 +12,12 @@ public class Index {
     private Map<ObjectId, Integer> locations;
     private double tfIdf;
 
-    public ObjectId getID() {
-        return id;
-    }
 
-    public String getTerm() {
-        return term;
-    }
-
-    public void setTerm(String term) {
-        this.term = term;
-    }
-
-
+    /**
+     * If the locations map contains the key, increment the occurrence count.
+     * Otherwise, put the location (ObjectId) & set the occurrence count to 1.
+     * @param location: (ObjectId) The document where the term was seen.
+     */
     public void addLocation(ObjectId location) {
         if (locations.containsKey(location)) {
             int count = locations.get(location) + 1;
@@ -33,15 +26,12 @@ public class Index {
             locations.put(location, 1);
         }
     }
-    public int docCount(){
-        return locations.size();
+
+    public void setTerm(String term) {
+        this.term = term;
     }
 
     public void setLocations(Map<ObjectId, Integer> locations) {
         this.locations = locations;
     }
-
-    /*public void setTfIdf(double tfIdf) {
-        this.tfIdf = tfIdf;
-    }*/
 }

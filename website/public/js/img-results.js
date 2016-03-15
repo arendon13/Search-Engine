@@ -3,7 +3,7 @@ var ResultList = React.createClass({
     var resultNodes = this.props.data.map(function(result, i) {
       return (
 					<a href={result.url} key={i}>
-						<img className='img-result' src={result.url} />
+						<img className='img-result' src={result.url} alt="broken link"/>
 					</a>
         );
       });
