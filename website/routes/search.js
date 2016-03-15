@@ -7,7 +7,7 @@ module.exports = function(app){
 
 	app.get('/search/image', function(req, res) {
 		var data = [];
-		results = db.collection('ImgIndex').findOneAsync({ "term" : req.query.query})
+		results = db.collection('ImgIndex').findOneAsync({ "tag" : req.query.query})
 			.then(function(results){
 				if (results !== null){
 

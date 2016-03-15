@@ -35,6 +35,9 @@ task data_dump(type: JavaExec) {
 task index(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'edu.csula.cs454.indexer.IndexDocuments'
+    if (project.hasProperty("arguments")) {
+        args arguments.split(",")
+    }
 }
 
 task crawl(type: JavaExec) {
