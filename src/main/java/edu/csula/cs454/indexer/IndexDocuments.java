@@ -2,6 +2,8 @@ package edu.csula.cs454.indexer;
 
 import com.mongodb.MongoClient;
 import edu.csula.cs454.crawler.DocumentMetadata;
+import edu.csula.cs454.ranker.ToastRanker;
+
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.Datastore;
@@ -18,12 +20,17 @@ import java.util.Map;
 public class IndexDocuments {
     public static void main(String args[]){
         final Morphia morphia = new Morphia();
+        morphia.map(Index.class);
+        morphia.map(DocumentMetadata.class);        
         final Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
         ds.delete(ds.createQuery(Index.class));
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
         int totalDocs = (int) documents.countAll();
-
+        double initialRank = 1.0/totalDocs;
+        ToastRanker ranker = new ToastRanker();
         for (DocumentMetadata doc : documents){
+        	doc.setRank(initialRank); 
+        	ranker.addDocument(doc);
             for (String term : doc.getContent()) {
                 //Check if term exists in index
                 //if if does, then append class with new id
@@ -37,8 +44,13 @@ public class IndexDocuments {
                     ds.save(newTerm);
                 }
             }
+            //save rank for the document
+            ds.save(doc);
         }
-        System.out.println("Done indexing, calculating tf-idf");
+        System.out.println("Done indexing");
+        System.out.println("Let the ranking begin!!!!");
+        ranker.rankDocumentsUsingSecretToastMethod();
+        System.out.print("Ranking is complete!!");
         //calculateTfIdf(ds, totalDocs);
     }
 
