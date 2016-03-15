@@ -46,14 +46,18 @@ module.exports = function(app){
 						return new Promise(function(resolve, reject){
 							location = db.collection('DocumentMetadata').findOneAsync({"_id" : new oid(id)})
 								.then(function(location){
-									data.push({ url: location['url'], tfidf: (results['locations'][id] / length) });
+									var totalTerms = Object.keys(location['content']).length;
+									var termNum = results['locations'][id];
+									var tf = Math.log(1 + (termNum / totalTerms));
+									var idf = Math.log10(1150 / length);
+									data.push({ url: location['url'], tfidf: tf * idf });
 									resolve();
 								})
 						})
 					})
 					.then(function(){
-					data.sort(compareText);
-					res.send(data);
+						data.sort(compareText);
+						res.send(data);
 				})
 
 				} else {
