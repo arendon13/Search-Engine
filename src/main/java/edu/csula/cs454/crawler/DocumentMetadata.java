@@ -19,21 +19,21 @@ public class DocumentMetadata {
 	private int numLinksOut;
 	//private ArrayList<Integer> linksToMe;
 	//private ArrayList<String> outGoingLinks;
-	//private int idInt;
+	private int idInt;
 	
 	public DocumentMetadata(){
 		
 	}
 
-	/*public DocumentMetadata(int idInt, double rank, String url){
+	public DocumentMetadata(int idInt, double rank, String url){
 		this.idInt = idInt;
 		this.rank = rank;
 		this.url = url;
-	}*/
+	}
 	
-	/*public int getIdInt() {
+	public int getIdInt() {
 		return idInt;
-	}*/
+	}
 
 	/*public ArrayList<String> getOutGoingLinks(){
 		return outGoingLinks;

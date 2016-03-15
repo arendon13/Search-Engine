@@ -2,8 +2,11 @@ package edu.csula.cs454.ranker;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -59,23 +62,100 @@ public class ToastRanker {
 	}
 
 	public DocumentMetadata[] rankDocumentsUsingSecretToastMethod() {
-		// TODO link analyysis ranking should be done here
+		// TODO link analysis ranking should be done here
+		double sum;
+		double oldRank;
+		boolean recurs = false;
 		
+		Map<String, Double> oldRanks = getRanks(allDocuments);
 		
-		
-		
-		
-		
-		//after ranking all documents, return an array of all the documents so that 
-		//it can be saved to the db
-		DocumentMetadata[] results = new DocumentMetadata[allDocuments.size()];	
-		int index = 0;
-		for(DocumentMetadata d: allDocuments){
-			results[index] = d;
-			index++;
+		for (Entry<String, DocumentMetadata> entry : allDocuments.entrySet()) {
+		    String key = entry.getKey();
+		    DocumentMetadata value = entry.getValue();
+		    
+		    sum = 0.0;
+			oldRank = 0.0;
+			
+			DocumentMetadata[] incomingDocs = getIncomingDocs(value);
+			
+			for(DocumentMetadata d: incomingDocs){
+				int numOutgoing = outgoing.get(d.getURL()).size();
+				oldRank = oldRanks.get(d.getURL());
+				
+				sum += oldRank / numOutgoing;
+			}
+			
+			double newRank = round(sum);
+			
+//			System.out.println(value.getURL() + ": newrank = " + newRank + "; oldrank = " + value.getRank());
+			
+			if(!recurs){
+				oldRank = value.getRank();
+				double change = newRank - oldRank;
+				if(change != 0){
+					recurs = true;
+				}
+			}
+			
+			value.setRank(newRank);
 		}
+		
+		if(recurs){
+			rankDocumentsUsingSecretToastMethod();
+		}
+		else{
+			//after ranking all documents, return an array of all the documents so that 
+			//it can be saved to the db
+			DocumentMetadata[] array = getFinalArray();
+			return array;
+		}
+		
+		// benji, double check this eclipse made me add this return statement
+		return null;
 	}
 	
+	public DocumentMetadata[] getFinalArray(){
+		int size = allDocuments.size();
+		DocumentMetadata[] array = new DocumentMetadata[size];
+		
+		int index = 0;
+		for (Entry<String, DocumentMetadata> entry : allDocuments.entrySet()) {
+		    DocumentMetadata value = entry.getValue();
+		    array[index] = value;
+		}
+		
+		return array;
+	}
 	
+	public DocumentMetadata[] getIncomingDocs(DocumentMetadata curDoc){
+		int size = incoming.get(curDoc.getURL()).size();
+		DocumentMetadata[] doc = new DocumentMetadata[size];
+		
+		for(int i = 0; i < doc.length; i++){
+			doc[i] = allDocuments.get(incoming.get(curDoc.getURL()).toArray()[i]);
+		}
+		
+		return null;
+	}
+	
+	public Map<String, Double> getRanks(HashMap <String, DocumentMetadata> allDocs){
+		/*
+		 * Returns a map 
+		 */
+		Map<String, Double> oldRanks = new HashMap<String, Double>();
+		for (Entry<String, DocumentMetadata> entry : allDocs.entrySet()) {
+		    DocumentMetadata value = entry.getValue();
+		    oldRanks.put(value.getURL(), value.getRank());
+		}
+		
+		return oldRanks;
+	}
+	
+	public double round(double x){
+		/*
+		 * Rounds to the nearest two decimals
+		 */
+		return Math.round(x * 100.0) / 100.0;
+	}
 
 }
