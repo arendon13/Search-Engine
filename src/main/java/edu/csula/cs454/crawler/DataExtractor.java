@@ -43,6 +43,7 @@ public class DataExtractor extends Thread implements Runnable {
 			while(controller.hasDocuments())
 			{
 				WebDocument doc = controller.getNextDocument();
+				if(doc == null)continue;
 				//extract url
 				//String docURL = doc.getUrl();	
 				DocumentMetadata docMetadata = new DocumentMetadata();
@@ -53,7 +54,7 @@ public class DataExtractor extends Thread implements Runnable {
 				docMetadata.setContent(doc.getContent());
 				docMetadata.setPath(doc.getPath());	
 				docMetadata.setFileExtestion(doc.getExtension());
-				dataStore.save(docMetadata);	
+				/*if(docMetadata.isHtml())*/dataStore.save(docMetadata);	
 			}			
 		}	
 	}

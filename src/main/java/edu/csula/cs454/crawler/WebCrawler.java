@@ -3,6 +3,8 @@ package edu.csula.cs454.crawler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.jsoup.Jsoup;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
@@ -12,8 +14,9 @@ public class WebCrawler {
 	private ArrayList<String> seeds;
 	private ArrayList<String> visited = new ArrayList<String>();
 	private int crawlDepth;
-	private Stack<WebDocument> docs;
-	protected WebCrawler(Stack<WebDocument> docs){
+	//private Stack<WebDocument> docs;
+	private ConcurrentLinkedQueue<WebDocument>docs;
+	protected WebCrawler(ConcurrentLinkedQueue<WebDocument> docs){
 		seeds = new ArrayList<String>();
 		this.docs = docs;
 	}	
@@ -40,7 +43,7 @@ public class WebCrawler {
 			try {
 				System.out.println(curDepth + ": Connecting to..." + i);
 				Document doc = Jsoup.connect(i).get();//connect the html page
-				System.out.println("Document Received! ");
+				//System.out.println("Document Received! ");
 				//get all links on the page 
 				Elements elts = doc.select("a");
 				for(int j = 0, length = elts.size(); j < length; j++)
@@ -49,7 +52,8 @@ public class WebCrawler {
 					childLinks.add(elts.get(j).absUrl("href"));
 				}
 				//add document to list of documents crawled
-				docs.push(new WebDocument(doc));
+				//docs.push(new WebDocument(doc));
+				docs.add(new WebDocument(doc));
 				
 				//TODO get all images on the page 
 				Elements images = doc.select("img");
@@ -58,13 +62,13 @@ public class WebCrawler {
 				{
 					String link = images.get(j).attr("abs:src").trim();
 					if(link.length() == 0)continue;
-					System.out.println("Extracting from: "+link);
+					//System.out.println("Extracting from: "+link);
 					crawlNonHtml(link);					
 				}
 				
 			} catch (IOException e) {
 				//if its not html or xml what is it
-				System.out.println("Document is not Html! ");
+				//System.out.println("Document is not Html! ");
 				crawlNonHtml(i);
 			}
 		}
@@ -82,8 +86,8 @@ public class WebCrawler {
 	private void crawlNonHtml(String link){
 		try{
 			Response response = Jsoup.connect(link).userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6").ignoreContentType(true).execute();
-			docs.push(new WebDocument(response));
-			System.out.println("Documnet Received! ");
+			docs.add(new WebDocument(response));
+			//System.out.println("Documnet Received! ");
 		}catch(Exception er){
 			System.err.println("Document could not be retreived: "+er.getMessage());
 		}		

@@ -15,28 +15,23 @@ public class DocumentMetadata {
 	private String path;
 	private String[] content;
 	private String ext;//file extension
-	private double rank;//page rank of the document 
-	private int numLinksOut;
-	private ArrayList<Integer> linksToMe;
-	private ArrayList<String> outGoingLinks;
+	private double rank;//page rank of the document
 	private int idInt;
 	
 	public DocumentMetadata(){
 		
 	}
 
-	public DocumentMetadata(int idInt, double rank){
+	public DocumentMetadata(int idInt, double rank, String url){
 		this.idInt = idInt;
 		this.rank = rank;
+		this.url = url;
 	}
 	
-	public ArrayList<String> getOutGoingLinks(){
-		return outGoingLinks;
+	public int getIdInt() {
+		return idInt;
 	}
 	
-	public void setOutGoingLinks(ArrayList<String> links){
-		outGoingLinks = links;
-	}
 	
 	public String[] getContent() {
 		return content;
@@ -72,5 +67,9 @@ public class DocumentMetadata {
 
 	public String getPath() {
 		return path;
+	}
+	
+	public boolean isHtml() {
+		return ext.equalsIgnoreCase("html");
 	}
 }

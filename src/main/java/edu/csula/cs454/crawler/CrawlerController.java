@@ -1,23 +1,27 @@
 package edu.csula.cs454.crawler;
 
 import java.util.Stack;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.jsoup.nodes.Document;
 //This will be a Singleton instance to avoid multithreaded confusion
 public class CrawlerController {
 	 private static CrawlerController instance = null;
-	 private Stack<WebDocument> docs;
+	 //private Stack<WebDocument> docs;
+	 private ConcurrentLinkedQueue<WebDocument> docs;
 	 private DataExtractor[] extractors;
 	 private int numOfExtractors = 1;
 	 WebCrawler crawler;
 	 private String storageFolder;
 	 private String database;
 	 private boolean isCrawling;
-	 private boolean poping =false;
+	 //private boolean poping =false;
 	 private boolean shouldExtract = false;
 
 	 private CrawlerController(){//made private to enforce singleton 
 		 System.out.println("Creating Crawler Controller");
-		 docs = new Stack<WebDocument>();
+		 //docs = new Stack<WebDocument>();
+		 docs = new ConcurrentLinkedQueue<WebDocument>();
 		 crawler = new WebCrawler(docs);
 		 isCrawling = false;
 	 }
@@ -70,15 +74,15 @@ public class CrawlerController {
 	}
 
 	public synchronized boolean hasDocuments() {
-		while(poping);
+		//while(poping);
 		return !docs.isEmpty();
 	}
 
 	public synchronized WebDocument getNextDocument() {
-		poping = true;
-		WebDocument d = docs.pop();
-		poping = false;
-		return d;
+		//poping = true;
+		//WebDocument d = docs.pop();
+		//poping = false;
+		return docs.poll();
 	}
 
 	public String getMetaDataStorageDatabase() {

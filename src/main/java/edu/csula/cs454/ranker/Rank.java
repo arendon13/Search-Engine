@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
-
 
 public class Rank {
 	static Map<String, ExampleDocument> docs = new HashMap<String, ExampleDocument>();

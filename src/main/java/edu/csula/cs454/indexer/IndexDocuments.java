@@ -6,6 +6,8 @@ import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
 import com.mongodb.MongoClient;
 import edu.csula.cs454.crawler.DocumentMetadata;
+import edu.csula.cs454.ranker.ToastRanker;
+
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Morphia;
 import org.mongodb.morphia.Datastore;
@@ -21,20 +23,16 @@ import java.util.Map;
  * Created by esauceda on 2/26/16.
  */
 public class IndexDocuments {
-    /**
-     * Main function. Iterates & indexes through all documents in the DocumentMetadata collection.
-     * Utilizes Clarafai API to return image tags.
-     * @param args
-     */
     public static void main(String args[]){
-        System.out.println(args[0]);
-        System.out.println(args[1]);
         final Morphia morphia = new Morphia();
+        morphia.map(Index.class);
+        morphia.map(DocumentMetadata.class);        
         final Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
         String APP_ID = args[0];
         String APP_SECRET = args[1];
         ds.delete(ds.createQuery(Index.class));
         ds.delete(ds.createQuery(ImgIndex.class));
+        ToastRanker ranker = new ToastRanker();
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
         ClarifaiClient clarifai = new ClarifaiClient(APP_ID, APP_SECRET);
         HashSet<String> files = new HashSet<String>();
@@ -42,6 +40,8 @@ public class IndexDocuments {
         int size = documents.asList().size();
 
         for (DocumentMetadata doc : documents){
+            //Image recognition
+            ranker.addDocument(doc);
             if (doc.getContent().length == 0 && !files.contains(doc.getURL())){
                 files.add(doc.getURL());
                 File img = new File(doc.getPath());
@@ -74,6 +74,15 @@ public class IndexDocuments {
                 System.out.println("Processed " + counter + " Documents out of " + size);
             }
         }
+        System.out.println("Done indexing");
+        System.out.println("Let the ranking begin!!!!");
+        DocumentMetadata[] rankedDocs = ranker.rankDocumentsUsingSecretToastMethod();
+        for(DocumentMetadata d:  rankedDocs )
+        {
+        	ds.save(d);
+        }
+        System.out.print("Ranking is complete!!");
+        //calculateTfIdf(ds, totalDocs);
     }
 
     /**

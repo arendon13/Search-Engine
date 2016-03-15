@@ -192,7 +192,7 @@ public class WebDocument {
 	public void saveToDisk(String storagePath){
 		path = storagePath;
 		String fileName = getPath();
-		System.out.println("Saving to file:"+fileName);
+		//System.out.println("Saving to file:"+fileName);
 		try {
 				new FileOutputStream(fileName, false).close();
 				if(isHtml){
