@@ -15,6 +15,7 @@ public class RankTest {
 	
 	static HashMap<Integer, HashSet<Integer>> linksFromMe = new HashMap<Integer, HashSet<Integer>>();
 	static HashMap<Integer, HashSet<Integer>> linksToMe = new HashMap<Integer, HashSet<Integer>>();
+	static HashMap<Integer, DocumentMetadata> docs = new HashMap<Integer, DocumentMetadata>();
 	static ArrayList<DocumentMetadata> collection;
 
 	public static void main(String[] args) {
@@ -27,12 +28,88 @@ public class RankTest {
 		
 		initializeRank(collection);
 		
+		populateDocs();
+		
 		getLinksFromMe();
 		
 		determineLinksToMe();
 		
-		System.out.println(linksFromMe.toString());
-		System.out.println(linksToMe.toString());
+		rankCollection(collection);
+		
+//		System.out.println(linksFromMe.toString());
+//		System.out.println(linksToMe.toString());
+	}
+	
+	public static void populateDocs(){
+		for(DocumentMetadata doc: collection){
+			docs.put(doc.getIdInt(), doc);
+		}
+	}
+	
+	public static void rankCollection(ArrayList<DocumentMetadata> allDocs){
+		double sum;
+		double oldRank;
+		boolean recurs = false;
+		Map<Integer, Double> oldRanks = getRanks(collection);
+		
+		for(DocumentMetadata doc: allDocs){
+			sum = 0.0;
+			oldRank = 0.0;
+			
+			linksToMe.get(doc.getIdInt()).toArray();
+			DocumentMetadata[] incomingDocs = getIncomingDocs(doc);
+			
+			for(DocumentMetadata d: incomingDocs){
+				int numOutgoing = linksFromMe.get(d.getIdInt()).size();
+				oldRank = oldRanks.get(d.getIdInt());
+						
+				sum += oldRank / numOutgoing;
+			}
+			
+			double newRank = round(sum);
+			
+			System.out.println(doc.getURL() + ": newrank = " + newRank + "; oldrank = " + doc.getRank());
+			
+			if(!recurs){
+				oldRank = doc.getRank();
+				double change = newRank - oldRank;
+				if(change != 0){
+					recurs = true;
+				}
+			}
+			
+			doc.setRank(newRank);
+		}
+		
+		if(recurs){
+			rankCollection(allDocs);
+		}
+		else{
+			System.out.println("\nRecursion finished. final converged result is: ");
+			System.out.println("A: " + collection.get(0).getRank() + "\nB: " + collection.get(1).getRank() + "\nC: " + collection.get(2).getRank());
+			return;
+		}
+	}
+	
+	public static DocumentMetadata[] getIncomingDocs(DocumentMetadata curDoc){
+		DocumentMetadata[] doc = new DocumentMetadata[linksToMe.get(curDoc.getIdInt()).size()];
+		
+		for(int i = 0; i < doc.length; i++){
+			doc[i] = docs.get(linksToMe.get(curDoc.getIdInt()).toArray()[i]);
+		}
+		
+		return doc;
+	}
+	
+	public static Map<Integer, Double> getRanks(ArrayList<DocumentMetadata> allDocs){
+		/*
+		 * Returns a map 
+		 */
+		Map<Integer, Double> oldRanks = new HashMap<Integer, Double>();
+		for(DocumentMetadata doc: allDocs){
+			oldRanks.put(doc.getIdInt(), doc.getRank());
+		}
+		return oldRanks;
 	}
 	
 	public static void determineLinksToMe(){
