@@ -38,15 +38,17 @@ var SearchForm = React.createClass({
     return (
       <form className="searchForm" onSubmit={this.handleSubmit} >
         <div className='form-group'>
-        <input 
-         type='text' 
-         className='form-control' 
-         name="query"
-         value={this.state.query}
-         onChange={this.handleQueryChange} />
-        </div>
-        <div className='form-group text-center'>
-        <input type='submit' className='btn btn-primary' value='Search' />
+          <div className='input-group'>
+            <input 
+              type='text' 
+              className='form-control' 
+              name="query"
+              value={this.state.query}
+              onChange={this.handleQueryChange} />
+            <span className="input-group-btn">
+              <input type='submit' className='btn btn-primary' value='Search' />
+            </span>
+          </div>
         </div>
       </form>
       )  
