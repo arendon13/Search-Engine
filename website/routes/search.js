@@ -22,7 +22,7 @@ module.exports = function(app){
 										path: 'images/' + raw_path,
 										prob: results['locations'][id],
 										ext: location['ext'],
-										url: location['url']
+										url: location['url'],
 								 	});
 									resolve();
 								})
@@ -55,7 +55,8 @@ module.exports = function(app){
 									var termNum = results['locations'][id];
 									var tf = Math.log(1 + (termNum / totalTerms));
 									var idf = Math.log10(1150 / length);
-									data.push({ url: location['url'], tfidf: tf * idf });
+									var tfidf = tf * idf;
+									data.push({ url: location['url'], rank: ((tfidf + location['rank']) / 2), td_idf: tfidf, raw_rank: location['rank']});
 									resolve();
 								})
 						})
@@ -73,10 +74,10 @@ module.exports = function(app){
 }
 
 function compareText(a, b){
-	if (a.tfidf < b.tfidf){
+	if (a.rank < b.rank){
 		return 1
 	}
-	if (a.tfidf > b.tfidf){
+	if (a.rank > b.rank){
 		return -1
 	}
 	return 0

@@ -9,7 +9,9 @@ var ResultList = React.createClass({
         <div key={i}>
           <h2 className="resultHeader"> {capitalize(result.url)} </h2>
           <a className="result" href={result.url}> {result.url} </a> <br />
-          <strong> TF-IDF: {result.tfidf} </strong>
+					<strong> TF-IDF: {result.td_idf} </strong><br />
+					<strong> Rank: {result.raw_rank} </strong><br />
+					<strong> Combined: {result.rank} </strong><br />
         </div>
         );
       });
