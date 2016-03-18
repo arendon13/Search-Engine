@@ -1,0 +1,451 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+  <!-- headlinks removed --> 
+  <link rel="shortcut icon" href="../../../../misc/favicon.ico"> 
+  <title>LU decomposition - Wikipedia, the free encyclopedia</title> 
+  <style type="text/css">/*<![CDATA[*/ @import "../../../../skins/offline/main.css"; /*]]>*/</style> 
+  <link rel="stylesheet" type="text/css" media="print" href="../../../../skins/common/commonPrint.css"> 
+  <!--[if lt IE 5.5000]><style type="text/css">@import "../../../../skins/monobook/IE50Fixes.css";</style><![endif]--> 
+  <!--[if IE 5.5000]><style type="text/css">@import "../../../../skins/monobook/IE55Fixes.css";</style><![endif]--> 
+  <!--[if IE 6]><style type="text/css">@import "../../../../skins/monobook/IE60Fixes.css";</style><![endif]--> 
+  <!--[if IE]><script type="text/javascript" src="../../../../skins/common/IEFixes.js"></script>
+    <meta http-equiv="imagetoolbar" content="no" /><![endif]--> 
+  <script type="text/javascript" src="../../../../skins/common/wikibits.js"></script> 
+  <script type="text/javascript" src="../../../../skins/offline/md5.js"></script> 
+  <script type="text/javascript" src="../../../../skins/offline/utf8.js"></script> 
+  <script type="text/javascript" src="../../../../skins/offline/lookup.js"></script> 
+  <script type="text/javascript" src="../../../../raw/gen.js"></script> 
+  <style type="text/css">/*<![CDATA[*/
+@import "../../../../raw/MediaWiki%7ECommon.css";
+@import "../../../../raw/MediaWiki%7EMonobook.css";
+@import "../../../../raw/gen.css";
+/*]]>*/</style> 
+ </head> 
+ <body class="ns-0"> 
+  <div id="globalWrapper"> 
+   <div id="column-content"> 
+    <div id="content"> 
+     <a name="top" id="contentTop"></a> 
+     <h1 class="firstHeading">LU decomposition</h1> 
+     <div id="bodyContent"> 
+      <h3 id="siteSub">From Wikipedia, the free encyclopedia</h3> 
+      <div id="contentSub"></div> 
+      <!-- start content --> 
+      <p>In <a href="f452240fd45f71db671e9f344a438f20.html" title="Linear algebra">linear algebra</a>, the <b>LU decomposition</b> is a <a href="5afccb90be820b6276bc6526af14d8ad.html" title="Matrix decomposition">matrix decomposition</a> which writes a <a href="55844b7bdb0b1a92735668ec324366ba.html" title="Matrix (mathematics)">matrix</a> as the product of a lower and upper <a href="b5eee5513943a5475da2de8d01e7f471.html" title="Triangular matrix">triangular matrix</a>. The product sometimes includes a <a href="6527c0a7909d3cc12f1ed29237225d3d.html" title="Permutation matrix">permutation matrix</a> as well. This decomposition is used in <a href="ab23b8584a99310b08579b4c82d043bd.html" title="Numerical analysis">numerical analysis</a> to solve systems of <a href="8c137ecd26c0d26635e0b107a5f0c226.html" class="mw-redirect" title="Linear equations">linear equations</a> or calculate the <a href="7937e5061d64754a5114e8a99fbbce1b.html" title="Determinant">determinant</a>.</p> 
+      <table id="toc" class="toc" summary="Contents"> 
+       <tbody>
+        <tr> 
+         <td> 
+          <div id="toctitle"> 
+           <h2>Contents</h2> 
+          </div> 
+          <ul> 
+           <li class="toclevel-1"><a href="b97a771587a2fcf0a63d326983bb55cf.html"><span class="tocnumber">1</span> <span class="toctext">Definitions</span></a></li> 
+           <li class="toclevel-1"><a href="f3a7dc6e37de4bfca7afda9b9d5230a0.html"><span class="tocnumber">2</span> <span class="toctext">Existence and uniqueness</span></a></li> 
+           <li class="toclevel-1"><a href="760cf3b38104985953584016db94f6d6.html"><span class="tocnumber">3</span> <span class="toctext">Positive definite matrices</span></a></li> 
+           <li class="toclevel-1"><a href="6e69235acdf81ac41d4a105c016db1bc.html"><span class="tocnumber">4</span> <span class="toctext">Explicit Formulation</span></a></li> 
+           <li class="toclevel-1"><a href="86854a197c56dfa46efce7f50c442304.html"><span class="tocnumber">5</span> <span class="toctext">Algorithms</span></a> 
+            <ul> 
+             <li class="toclevel-2"><a href="da2654af44021306437a73dd6ece3eff.html"><span class="tocnumber">5.1</span> <span class="toctext">Doolittle algorithm</span></a></li> 
+             <li class="toclevel-2"><a href="6ae60de0262a2deeef51746ee4a646bf.html"><span class="tocnumber">5.2</span> <span class="toctext">LUP algorithm</span></a></li> 
+            </ul> </li> 
+           <li class="toclevel-1"><a href="ef274c6868655ee66eebf7517daca73c.html"><span class="tocnumber">6</span> <span class="toctext">Small Example</span></a></li> 
+           <li class="toclevel-1"><a href="5e74e0252dd3be4aa67cffa6adf269e3.html"><span class="tocnumber">7</span> <span class="toctext">Applications</span></a> 
+            <ul> 
+             <li class="toclevel-2"><a href="763afc9d3846b10a7dd98431c9ea1a7e.html"><span class="tocnumber">7.1</span> <span class="toctext">Solving linear equations</span></a></li> 
+             <li class="toclevel-2"><a href="5cb7ac88fef070022d24e9292188069d.html"><span class="tocnumber">7.2</span> <span class="toctext">Inverse matrix</span></a></li> 
+             <li class="toclevel-2"><a href="6c21b30da3387ee47651489c230bcc85.html"><span class="tocnumber">7.3</span> <span class="toctext">Determinant</span></a></li> 
+            </ul> </li> 
+           <li class="toclevel-1"><a href="2cf11493bc0445fc78aed06c309457a8.html"><span class="tocnumber">8</span> <span class="toctext">See also</span></a></li> 
+           <li class="toclevel-1"><a href="c22829b1f5c481d4a7a98292131069b3.html"><span class="tocnumber">9</span> <span class="toctext">References</span></a></li> 
+           <li class="toclevel-1"><a href="ecdf770ae06566d9cc5e0e510658f53e.html"><span class="tocnumber">10</span> <span class="toctext">External links</span></a></li> 
+          </ul> </td> 
+        </tr> 
+       </tbody>
+      </table> 
+      <script type="text/javascript">
+//<![CDATA[
+ if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } 
+//]]>
+</script> 
+      <p><a name="Definitions" id="Definitions"></a></p> 
+      <h2><span class="editsection">[<a href="2474561cea9feb8db5187070f2b26a5c.html" title="Edit section: Definitions">edit</a>]</span> <span class="mw-headline">Definitions</span></h2> 
+      <p>Let <i>A</i> be a square matrix. An <b>LU decomposition</b> is a decomposition of the form</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" A = LU, \, " src="../../../../math/8/7/6/876180912b15786098dec767e76bce71.png">
+       </dd> 
+      </dl> 
+      <p>where <i>L</i> and <i>U</i> are lower and upper triangular matrices (of the same size), respectively. This means that <i>L</i> has only zeros above the diagonal and <i>U</i> has only zeros below the diagonal. For a <img class="tex" alt="3 \times 3" src="../../../../math/b/a/0/ba0dffbf721ff09756465187f3aca372.png"> matrix, this becomes:</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" 
+        \begin{bmatrix}
+           a_{11} &amp; a_{12} &amp; a_{13} \\
+           a_{21} &amp; a_{22} &amp; a_{23} \\
+           a_{31} &amp; a_{32} &amp; a_{33} \\
+        \end{bmatrix} =
+      \begin{bmatrix}
+           l_{11} &amp; 0 &amp; 0 \\
+           l_{21} &amp; l_{22} &amp; 0 \\
+           l_{31} &amp; l_{32} &amp; l_{33} \\
+        \end{bmatrix}
+        \begin{bmatrix}
+           u_{11} &amp; u_{12} &amp; u_{13} \\
+           0 &amp; u_{22} &amp; u_{23} \\
+           0 &amp; 0 &amp; u_{33} \\
+        \end{bmatrix}.
+" src="../../../../math/b/9/7/b97bd8acd842d1cad85188d45ef8c409.png">
+       </dd> 
+      </dl> 
+      <p>An <b>LDU decomposition</b> is a decomposition of the form</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" A = LDU, \, " src="../../../../math/8/0/2/802f0b9f0142f76aeccf2d239071d62d.png">
+       </dd> 
+      </dl> 
+      <p>where <i>D</i> is a <a href="677930e7bad7f0d2828fc379e0192fe1.html" title="Diagonal matrix">diagonal matrix</a> and <i>L</i> and <i>U</i> are <i>unit</i> triangular matrices, meaning that all the entries on the diagonals of <i>L</i> and <i>U</i> are one.</p> 
+      <p>An <b>LUP decomposition</b> (also called a <b>LU decomposition</b> with partial pivoting) is a decomposition of the form</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" A = LUP, \, " src="../../../../math/a/b/f/abf70e05b605ef8825dd8a2cd5ea6b18.png">
+       </dd> 
+      </dl> 
+      <p>where <i>L</i> and <i>U</i> are again lower and upper triangular matrices and <i>P</i> is a <a href="e92dd7e9e88265f96f5c6ccf924ffd47.html" title="Permutation matrix">permutation matrix</a>, i.e., a matrix of zeros and ones that has exactly one entry 1 in each row and column.</p> 
+      <p>An '<i>LU decomposition</i> with full pivoting (Trefethen and Bau) takes the form</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" PAQ = LU, \, " src="../../../../math/d/c/5/dc5d37cc1683694810583bc1d0a6137c.png">
+       </dd> 
+      </dl> 
+      <p><a name="Existence_and_uniqueness" id="Existence_and_uniqueness"></a></p> 
+      <h2><span class="editsection">[<a href="eb66250a6bf00394c14e097068e894f1.html" title="Edit section: Existence and uniqueness">edit</a>]</span> <span class="mw-headline">Existence and uniqueness</span></h2> 
+      <p>An <a href="29d8458c5e9e829b4d4cd3c10288746f.html" title="Invertible matrix">invertible matrix</a> admits an <i>LU</i> factorization <a href="1a4f168598412bfc6a67e0b3328f346a.html" title="If and only if">if and only if</a> all its principal <a href="ca74db9f825435dd48ad627642cca37e.html" title="Minor (linear algebra)">minors</a> are non-zero. The factorization is unique if we require that the diagonal of <i>L</i> (or <i>U</i>) consist of ones. The matrix has a unique <i>LDU</i> factorization under the same conditions.</p> 
+      <p>If the matrix is singular, then an <i>LU</i> factorization may still exist. In fact, a square matrix of <a href="6b421b8ae87b034d090d6bc965db7212.html" title="Rank (linear algebra)">rank</a> <i>k</i> has an <i>LU</i> factorization if the first <i>k</i> principal minors are non-zero.</p> 
+      <p>The exact necessary and sufficient conditions under which a not necessarily invertible matrix over any field has an LU factorization are known. The conditions are expressed in terms of the ranks of certain submatrices. The Gaussian elimination algorithm for obtaining LU decomposition has also been extended to this most general case <cite class="inline">(<a href="de86ca60e7af83a9ef0f980a7c745028.html" title="">Okunev &amp; Johnson 1997</a>)</cite>.</p> 
+      <p>Every matrix A --square or not-- admits a <i>LUP</i> factorization. The matrices L and P are square matrices, but U has the same shape as A. <i>Upper triangular</i> should be interpreted as having only zero entries below the main diagonal, which starts at the upper left corner. The <i>LUP</i> factorization can be done in such a way that U has only ones on its main diagonal.</p> 
+      <p><a name="Positive_definite_matrices" id="Positive_definite_matrices"></a></p> 
+      <h2><span class="editsection">[<a href="2c44db59477efefc9f8bc417d48b6d58.html" title="Edit section: Positive definite matrices">edit</a>]</span> <span class="mw-headline">Positive definite matrices</span></h2> 
+      <p>If the matrix <i>A</i> is <a href="16e42d7b37f69d225250c1c0989851be.html" title="Hermitian matrix">Hermitian</a> and <a href="be30ca6e29bf777595da5d2057803298.html" title="Positive-definite matrix">positive definite</a>, then we can arrange matters so that <i>U</i> is the <a href="7b65b7126cb73c552efaac84476849d1.html" title="Conjugate transpose">conjugate transpose</a> of <i>L</i>. In this case, we have written <i>A</i> as</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" A = L L^{*}. \, " src="../../../../math/a/e/0/ae0e7c41b138b28698a4eced2eb2263f.png">
+       </dd> 
+      </dl> 
+      <p>This decomposition is called the <a href="aa979edf697418eafac096df761f7f7b.html" title="Cholesky decomposition">Cholesky decomposition</a>. The Cholesky decomposition always exists and is unique. Furthermore, computing the Cholesky decomposition is more efficient and <a href="80a2af7d15dca1e90f34f60024a52fb3.html" title="Numerical stability">numerically more stable</a> than computing the LU decomposition.</p> 
+      <p><a name="Explicit_Formulation" id="Explicit_Formulation"></a></p> 
+      <h2><span class="editsection">[<a href="210480565f2b54b0b61b50c93e90e586.html" title="Edit section: Explicit Formulation">edit</a>]</span> <span class="mw-headline">Explicit Formulation</span></h2> 
+      <p>When an LDU factorization exists and is unique there is a closed (explicit) formula for the elements of L, D, and U in terms of ratios of determinants of certain submatrices of the original matrix A (Householder 1975). In particular, <span class="texhtml"><i>D</i><sub>1</sub> = <i>A</i><sub>1,1</sub></span> and for <img class="tex" alt="i = 2, \ldots, n" src="../../../../math/5/4/1/5417c104bcd8412294b528aaeccb607f.png">, <span class="texhtml"><i>D</i><sub><i>i</i></sub></span> is the ratio of the <span class="texhtml"><i>i</i><sup><i>t</i><i>h</i></sup></span> principal submatrix to the <span class="texhtml">(<i>i</i> − 1)<sup><i>t</i><i>h</i></sup></span> principal submatrix.</p> 
+      <p><a name="Algorithms" id="Algorithms"></a></p> 
+      <h2><span class="editsection">[<a href="f237bdea72849ba32cc2ab694cf7e151.html" title="Edit section: Algorithms">edit</a>]</span> <span class="mw-headline">Algorithms</span></h2> 
+      <p>The LU decomposition is basically a modified form of <a href="16c17908e13f2b7e906b89ed733d43fa.html" title="Gaussian elimination">Gaussian elimination</a>. We transform the matrix <i>A</i> into an upper triangular matrix <i>U</i> by eliminating the entries below the main diagonal. The Doolittle algorithm does the elimination column by column starting from the left, by multiplying <i>A</i> to the left with atomic lower triangular matrices. It results in a <i>unit lower triangular</i> matrix and an upper triangular matrix. The Crout algorithm is slightly different and constructs a lower triangular matrix and a <i>unit upper triangular</i> matrix.</p> 
+      <p>Computing the LU decomposition using either of these algorithms requires 2<i>n</i><sup>3</sup> / 3 floating point operations, ignoring lower order terms. Partial <a href="ff995e79660a172e5fac38e2f54968c1.html" class="mw-redirect" title="Pivoting">pivoting</a> adds only a quadratic term; this is not the case for full pivoting <cite class="inline">(<a href="6c9d7973150f0a5de52ca3b8bce34b04.html" title="">Golub &amp; Van Loan 1996</a>)</cite>.</p> 
+      <p><a name="Doolittle_algorithm" id="Doolittle_algorithm"></a></p> 
+      <h3><span class="editsection">[<a href="f7252a17f1d7a791db914421829b2d6f.html" title="Edit section: Doolittle algorithm">edit</a>]</span> <span class="mw-headline">Doolittle algorithm</span></h3> 
+      <p>Given an <i>N</i> × <i>N</i> matrix</p> 
+      <dl> 
+       <dd>
+        <span class="texhtml"><i>A</i> = (<i>a</i><sub><i>n</i>,<i>n</i></sub>)</span>
+       </dd> 
+      </dl> 
+      <p>we define</p> 
+      <dl> 
+       <dd>
+        <span class="texhtml"><i>A</i><sup>(0)</sup>: = <i>A</i></span>
+       </dd> 
+      </dl> 
+      <p>and then we iterate <i>n</i> = 1,...,<i>N-1</i> as follows.</p> 
+      <p>We eliminate the matrix elements below the main diagonal in the <i>n</i>-th column of <i>A</i><sup>(<i>n-1</i>)</sup> by adding to the <i>i</i>-th row of this matrix the <i>n</i>-th row multiplied by</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt="l_{i,n}&nbsp;:= -\frac{a_{i,n}^{(n-1)}}{a_{n,n}^{(n-1)}}" src="../../../../math/e/3/2/e329e704ac8a3b4dc60e2defea5cf486.png">
+       </dd> 
+      </dl> 
+      <p>for <img class="tex" alt="i = n+1,\ldots,N" src="../../../../math/7/8/a/78a829885b10052ea0d129347f3246e4.png">. This can be done by multiplying <i>A</i><sup>(<i>n-1</i>)</sup> to the left with the lower triangular matrix</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" 
+L_n =
+\begin{pmatrix}
+     1 &amp;        &amp;           &amp;         &amp;         &amp; 0 \\
+       &amp; \ddots &amp;           &amp;         &amp;         &amp;   \\
+       &amp;        &amp;         1 &amp;         &amp;         &amp;   \\
+       &amp;        &amp; l_{n+1,n} &amp;  \ddots &amp;         &amp;   \\
+       &amp;        &amp;    \vdots &amp;         &amp;  \ddots &amp;   \\
+     0 &amp;        &amp;   l_{N,n} &amp;         &amp;         &amp; 1 \\
+\end{pmatrix}.
+" src="../../../../math/8/c/e/8ce78c2809809dced169eb80b2f129ce.png">
+       </dd> 
+      </dl> 
+      <p>We set</p> 
+      <dl> 
+       <dd>
+        <span class="texhtml"><i>A</i><sup>(<i>n</i>)</sup>: = <i>L</i><sub><i>n</i></sub><i>A</i><sup>(<i>n</i> − 1)</sup>.</span>
+       </dd> 
+      </dl> 
+      <p>After <i>N-1</i> steps, we eliminated all the matrix elements below the main diagonal, so we obtain an upper triangular matrix <i>A</i><sup>(<i>N-1</i>)</sup>. We find the decomposition</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" 
+A = L_{1}^{-1} L_{1} A^{(0)}
+= L_{1}^{-1} A^{(1)} = L_{1}^{-1} L_{2}^{-1} L_{2} A^{(1)} = 
+L_{1}^{-1}L_{2}^{-1} A^{(2)} =\ldots = L_{1}^{-1} \ldots L_{N-1}^{-1} A^{(N-1)}.
+" src="../../../../math/c/9/7/c973166c0490d7025266b9d05036972e.png">
+       </dd> 
+      </dl> 
+      <p>Denote the upper triangular matrix <i>A</i><sup>(<i>N-1</i>)</sup> by <i>U</i>, and <img class="tex" alt="L=L_{1}^{-1} \ldots L_{N-1}^{-1}" src="../../../../math/f/a/1/fa1bdb179209217c30446449d0fdfced.png">. Because the inverse of a lower triangular matrix <i>L</i><sub><i>n</i></sub> is again a lower triangular matrix, and the multiplication of two lower triangular matrices is again a lower triangular matrix, it follows that <i>L</i> is a lower triangular matrix. We obtain <span class="texhtml"><i>A</i> = <i>L</i><i>U</i></span>.</p> 
+      <p>It is clear that in order for this algorithm to work, one needs to have <img class="tex" alt="a_{n,n}^{(n-1)}\not=0" src="../../../../math/c/d/9/cd990834ee8bd10bf806f2940ba84efd.png"> at each step (see the definition of <span class="texhtml"><i>l</i><sub><i>i</i>,<i>n</i></sub></span>). If this assumption fails at some point, one needs to interchange <i>n</i>-th row with another row below it before continuing. This is why the LU decomposition in general looks like <span class="texhtml"><i>P</i> <sup>− 1</sup><i>A</i> = <i>L</i><i>U</i></span>.</p> 
+      <p><a name="LUP_algorithm" id="LUP_algorithm"></a></p> 
+      <h3><span class="editsection">[<a href="c43b744f751974768c0fcf0c747b32ab.html" title="Edit section: LUP algorithm">edit</a>]</span> <span class="mw-headline">LUP algorithm</span></h3> 
+      <p>The LUP decomposition algorithm by Cormen et al. generalizes <a href="736895c8ab486fa49cf70663cfd98233.html" title="Crout matrix decomposition">Crout matrix decomposition</a>. It can be described as follows.</p> 
+      <ol> 
+       <li>If <span class="texhtml"><i>A</i></span> has a nonzero entry in its first row, then take a permutation matrix <span class="texhtml"><i>P</i><sub>1</sub></span> such that <span class="texhtml"><i>A</i><i>P</i><sub>1</sub></span> has a nonzero entry in its upper left corner. Otherwise, take for <span class="texhtml"><i>P</i><sub>1</sub></span> the identity matrix. Let <span class="texhtml"><i>A</i><sub>1</sub> = <i>A</i><i>P</i><sub>1</sub></span>.</li> 
+       <li>Let <span class="texhtml"><i>A</i><sub>2</sub></span> be the matrix that one gets from <span class="texhtml"><i>A</i><sub>1</sub></span> by deleting both the first row and the first column. Decompose <span class="texhtml"><i>A</i><sub>2</sub> = <i>L</i><sub>2</sub><i>U</i><sub>2</sub><i>P</i><sub>2</sub></span> recursively. Make <span class="texhtml"><i>L</i></span> from <span class="texhtml"><i>L</i><sub>2</sub></span> by first adding a zero row above and then adding the first column of <span class="texhtml"><i>A</i><sub>1</sub></span> at the left.</li> 
+       <li>Make <span class="texhtml"><i>U</i><sub>3</sub></span> from <span class="texhtml"><i>U</i><sub>2</sub></span> by first adding a zero row above and a zero column at the left and then replacing the upper left entry (which is 0 at this point) by 1. Make <span class="texhtml"><i>P</i><sub>3</sub></span> from <span class="texhtml"><i>P</i><sub>2</sub></span> in a similar manner and define <span class="texhtml"><i>A</i><sub>3</sub> = <i>A</i><sub>1</sub> / <i>P</i><sub>3</sub> = <i>A</i><i>P</i><sub>1</sub> / <i>P</i><sub>3</sub></span>. Let <span class="texhtml"><i>P</i></span> be the inverse of <span class="texhtml"><i>P</i><sub>1</sub> / <i>P</i><sub>3</sub></span>.</li> 
+       <li>At this point, <span class="texhtml"><i>A</i><sub>3</sub></span> is the same as <span class="texhtml"><i>L</i><i>U</i><sub>3</sub></span>, except (possibly) at the first row. If the first row of <span class="texhtml"><i>A</i></span> is zero, then <span class="texhtml"><i>A</i><sub>3</sub> = <i>L</i><i>U</i><sub>3</sub></span>, since both have first row zero, and <span class="texhtml"><i>A</i> = <i>L</i><i>U</i><sub>3</sub><i>P</i></span> follows, as desired. Otherwise, <span class="texhtml"><i>A</i><sub>3</sub></span> and <span class="texhtml"><i>L</i><i>U</i><sub>3</sub></span> have the same nonzero entry in the upper left corner, and <span class="texhtml"><i>A</i><sub>3</sub> = <i>L</i><i>U</i><sub>3</sub><i>U</i><sub>1</sub></span> for some upper triangular square matrix <span class="texhtml"><i>U</i><sub>1</sub></span> with ones on the diagonal (<span class="texhtml"><i>U</i><sub>1</sub></span> clears entries of <span class="texhtml"><i>L</i><i>U</i><sub>3</sub></span> and adds entries of <span class="texhtml"><i>A</i><sub>3</sub></span> by way of the upper left corner). Now <span class="texhtml"><i>A</i> = <i>L</i><i>U</i><sub>3</sub><i>U</i><sub>1</sub><i>P</i></span> is a decomposition of the desired form.</li> 
+      </ol> 
+      <p><a name="Small_Example" id="Small_Example"></a></p> 
+      <h2><span class="editsection">[<a href="aeeaa139eeaa7279a7f0706750004eab.html" title="Edit section: Small Example">edit</a>]</span> <span class="mw-headline">Small Example</span></h2> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" 
+        \begin{bmatrix}
+           4 &amp; 3 \\
+           6 &amp; 3 \\
+        \end{bmatrix} =
+      \begin{bmatrix}
+           l_{11} &amp; 0 \\
+           l_{21} &amp; l_{22} \\
+        \end{bmatrix}
+        \begin{bmatrix}
+           u_{11} &amp; u_{12} \\
+           0 &amp; u_{22} \\
+        \end{bmatrix}.
+" src="../../../../math/b/3/6/b3671ded31f90d74d5ee58d430409a33.png">
+       </dd> 
+      </dl> 
+      <p>One way of finding the LU decomposition of this simple matrix would be to simply solve the linear equations by inspection. You know that:</p> 
+      <dl> 
+       <dd>
+        <span class="texhtml"><i>l</i><sub>11</sub> * <i>u</i><sub>11</sub> + 0 * 0 = 4</span>
+       </dd> 
+       <dd>
+        <span class="texhtml"><i>l</i><sub>11</sub> * <i>u</i><sub>12</sub> + 0 * <i>u</i><sub>22</sub> = 3</span>
+       </dd> 
+       <dd>
+        <span class="texhtml"><i>l</i><sub>21</sub> * <i>u</i><sub>11</sub> + <i>l</i><sub>22</sub> * 0 = 6</span>
+       </dd> 
+       <dd>
+        <span class="texhtml"><i>l</i><sub>21</sub> * <i>u</i><sub>12</sub> + <i>l</i><sub>22</sub> * <i>u</i><sub>22</sub> = 3.</span>
+       </dd> 
+      </dl> 
+      <p>Such a system of equations is underdetermined. In this case any two non-zero elements of <i>L</i> and <i>U</i> matrices are parameters of the solution and can be set arbitrarily to any non-zero value. Therefore to find the unique LU decomposition, it is necessary to put some restriction on <i>L</i> and <i>U</i> matrices. For example, we can require the lower triangular matrix <i>L</i> to be a unit one (i.e. set all the entries of its main diagonal to ones). Then the system of equations has the following solution:</p> 
+      <dl> 
+       <dd>
+        <span class="texhtml"><i>l</i><sub>21</sub> = 1.5</span>
+       </dd> 
+       <dd>
+        <span class="texhtml"><i>u</i><sub>11</sub> = 4</span>
+       </dd> 
+       <dd>
+        <span class="texhtml"><i>u</i><sub>12</sub> = 3</span>
+       </dd> 
+       <dd>
+        <span class="texhtml"><i>u</i><sub>22</sub> = − 1.5.</span>
+       </dd> 
+      </dl> 
+      <p>Substituting these values into the LU decomposition above:</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" 
+        \begin{bmatrix}
+           4 &amp; 3 \\
+           6 &amp; 3 \\
+        \end{bmatrix} =
+      \begin{bmatrix}
+           1 &amp; 0 \\
+           1.5 &amp; 1 \\
+        \end{bmatrix}
+        \begin{bmatrix}
+           4 &amp; 3 \\
+           0 &amp; -1.5 \\
+        \end{bmatrix}.
+" src="../../../../math/f/7/1/f711a97db28c130e865bdb92f09951ff.png">
+       </dd> 
+      </dl> 
+      <p><a name="Applications" id="Applications"></a></p> 
+      <h2><span class="editsection">[<a href="60b5d0cce006bc56bcb8ac3d582a93b2.html" title="Edit section: Applications">edit</a>]</span> <span class="mw-headline">Applications</span></h2> 
+      <p><a name="Solving_linear_equations" id="Solving_linear_equations"></a></p> 
+      <h3><span class="editsection">[<a href="c77aa05ab3b3fe1f8eaf3b59a9b4d199.html" title="Edit section: Solving linear equations">edit</a>]</span> <span class="mw-headline">Solving linear equations</span></h3> 
+      <p>Given a matrix equation</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt="A x = L U x = b \," src="../../../../math/8/7/7/877a6d179a2fb63f040229b601f7f545.png">
+       </dd> 
+      </dl> 
+      <p>we want to solve the equation for a given <i>A</i> and <i>b</i>. In this case the solution is done in two logical steps:</p> 
+      <ol> 
+       <li>First, we solve the equation <span class="texhtml"><i>L</i><i>y</i> = <i>b</i></span> for <i>y</i></li> 
+       <li>Second, we solve the equation <span class="texhtml"><i>U</i><i>x</i> = <i>y</i></span> for <i>x</i>.</li> 
+      </ol> 
+      <p>Note that in both cases we have triangular matrices (lower and upper) which can be solved directly using forward and backward substitution without using the <a href="626cd3e55d7d2cee7a308e4f48eefc7d.html" title="Gaussian elimination">Gaussian elimination</a> process (however we need this process or equivalent to compute the <i>LU</i> decomposition itself). Thus the <i>LU</i> decomposition is computationally efficient only when we have to solve a matrix equation multiple times for different <i>b</i>. It is faster to do an LU decomposition of the matrix <i>A</i> once and then solve the triangular matrices for the different <i>b</i>, than to use Gaussian elimination each time.</p> 
+      <p><a name="Inverse_matrix" id="Inverse_matrix"></a></p> 
+      <h3><span class="editsection">[<a href="1f59e6c35b30dde391be458f9dddeff0.html" title="Edit section: Inverse matrix">edit</a>]</span> <span class="mw-headline">Inverse matrix</span></h3> 
+      <p>The matrices <i>L</i> and <i>U</i> can be used to calculate the <a href="603bb6d5954d7ed0adcccd2fa1f264d8.html" title="Invertible matrix">matrix inverse</a> by:</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt="
+A^{-1} = U^{-1}L^{-1}. \,
+" src="../../../../math/4/c/a/4cafa2103df94c7a561c77c5c313a7f9.png">
+       </dd> 
+      </dl> 
+      <p>Computer implementations that invert matrices often use this approach.</p> 
+      <p><a name="Determinant" id="Determinant"></a></p> 
+      <h3><span class="editsection">[<a href="a7a6d165d2f5bf89f7c50d6453ac113a.html" title="Edit section: Determinant">edit</a>]</span> <span class="mw-headline">Determinant</span></h3> 
+      <p>The matrices <span class="texhtml"><i>L</i></span> and <span class="texhtml"><i>U</i></span> can be used to compute the <a href="c8c7f446220513b6cf59189b35444125.html" title="Determinant">determinant</a> of the matrix <span class="texhtml"><i>A</i></span> very quickly, because det(<i>A</i>) = det(<i>L</i>) det(<i>U</i>) and the determinant of a triangular matrix is simply the product of its diagonal entries. In particular, if <i>L</i> is a unit triangular matrix, then</p> 
+      <dl> 
+       <dd>
+        <img class="tex" alt=" \det(A) = \det(L) \det(U) = \prod_{i=1}^n u_{ii}. " src="../../../../math/6/9/b/69b36e1fccf18f58456258aff9f6a67d.png">
+       </dd> 
+      </dl> 
+      <p>The same approach can be used for <i>LUP</i> decompositions. The determinant of the permutation matrix <i>P</i> is (−1)<sup><i>S</i></sup>, where <span class="texhtml"><i>S</i></span> is the number of row exchanges in the decomposition.</p> 
+      <p><a name="See_also" id="See_also"></a></p> 
+      <h2><span class="editsection">[<a href="8ea69a5101952011a040017a384dff36.html" title="Edit section: See also">edit</a>]</span> <span class="mw-headline">See also</span></h2> 
+      <ul> 
+       <li><a href="25a5a050f7d0357e59c4a4500d8f7f29.html" title="Block LU decomposition">Block LU decomposition</a></li> 
+       <li><a href="dac54b5ad6d558f30161dbc29352c64f.html" title="Cholesky decomposition">Cholesky decomposition</a></li> 
+       <li><a href="a8a7b73dd611ecadbda75ba70df34445.html" title="Matrix decomposition">Matrix decomposition</a></li> 
+       <li><a href="d3507ccaa907ff2db2a34ada82e8d679.html" class="mw-redirect" title="LU Reduction">LU Reduction</a></li> 
+      </ul> 
+      <p><a name="References" id="References"></a></p> 
+      <h2><span class="editsection">[<a href="669af146310238819f864dff8cecec4c.html" title="Edit section: References">edit</a>]</span> <span class="mw-headline">References</span></h2> 
+      <ul> 
+       <li><cite id="CITEREFTrefethenBau">Trefethen, Lloyd &amp; Bau, David, <i>Numerical Linear Algebra</i></cite><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=book&amp;rft.title=Numerical+Linear+Algebra&amp;rft.aulast=Trefethen&amp;rft.aufirst=Lloyd"><span style="display: none;">&nbsp;</span></span></li> 
+       <li><cite id="CITEREFCormenLeissersonRivest">Cormen, T.H.; Leisserson, C.E &amp; Rivest, R.L., <i>Introduction to Algorithms</i></cite><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=book&amp;rft.title=Introduction+to+Algorithms&amp;rft.aulast=Cormen&amp;rft.aufirst=T.H."><span style="display: none;">&nbsp;</span></span></li> 
+       <li><cite id="CITEREFGolubVan_Loan1996"><a href="b6d41fb9e0927b3846aafcf63f8fa437.html" title="Gene H. Golub">Golub, Gene H.</a> &amp; <a href="adae19065c715e7021cf2e20132e4164.html" title="Charles F. Van Loan">Van Loan, Charles F.</a> (1996), <i>Matrix Computations</i> (3rd ed.), Baltimore: Johns Hopkins, <a href="b32a46d38bc70f0b3afc6468e39fd591.html" class="internal">ISBN 978-0-8018-5414-9</a></cite><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=book&amp;rft.title=Matrix+Computations&amp;rft.aulast=Golub&amp;rft.aufirst=Gene+H.&amp;rft.date=1996&amp;rft.edition=3rd&amp;rft.place=Baltimore&amp;rft.place=Baltimore&amp;rft.pub=Johns+Hopkins&amp;rft.isbn=978-0-8018-5414-9"><span style="display: none;">&nbsp;</span></span>.</li> 
+       <li><cite id="CITEREFHornJohnson1985">Horn, Roger A. &amp; Johnson, Charles R. (1985), <i>Matrix Analysis</i>, Cambridge University Press, <a href="b67f58a9b0a9841863b5c2c8f96f2bdd.html" class="internal">ISBN 0-521-38632-2</a></cite><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=book&amp;rft.title=Matrix+Analysis&amp;rft.aulast=Horn&amp;rft.aufirst=Roger+A.&amp;rft.date=1985&amp;rft.pub=Cambridge+University+Press&amp;rft.isbn=0-521-38632-2"><span style="display: none;">&nbsp;</span></span>. See Section 3.5.</li> 
+       <li><cite id="CITEREFOkunevJohnson1997">Okunev, Pavel &amp; Johnson, Charles (1997), <i>Necessary And Sufficient Conditions For Existence of the LU Factorization of an Arbitrary Matrix</i>, <a href="f4a081d099471e8d9f5699f273366864.html" title="ArXiv">arXiv</a>:<a href="cab718af60619a9c4782471b7b2bd70d.html" class="extiw" title="arxiv:math.NA/0506382">math.NA/0506382</a></cite><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=book&amp;rft.title=Necessary+And+Sufficient+Conditions+For+Existence+of+the+LU+Factorization+of+an+Arbitrary+Matrix&amp;rft.aulast=Okunev&amp;rft.aufirst=Pavel&amp;rft.date=1997"><span style="display: none;">&nbsp;</span></span>.</li> 
+       <li><cite id="CITEREFHouseholder1975">Householder, Alston (1975), <i>The Theory of Matrices in Numerical Analysis</i></cite><span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=book&amp;rft.title=The+Theory+of+Matrices+in+Numerical+Analysis&amp;rft.aulast=Householder&amp;rft.aufirst=Alston&amp;rft.date=1975"><span style="display: none;">&nbsp;</span></span>.</li> 
+       <li><a href="15f1b224a3bbf0467160c9863b6b1194.html" class="external text" title="http://mathworld.wolfram.com/LUDecomposition.html" rel="nofollow">LU decomposition</a> on <i>MathWorld</i>.</li> 
+       <li><a href="2693382b2087d26c3821e787080d6ea5.html" class="external text" title="http://www.math-linux.com/spip.php?article51" rel="nofollow">LU decomposition</a> on <i>Math-Linux</i>.</li> 
+      </ul> 
+      <p><a name="External_links" id="External_links"></a></p> 
+      <h2><span class="editsection">[<a href="7a2d2f8ece78dabc3c37dc43ec9f8886.html" title="Edit section: External links">edit</a>]</span> <span class="mw-headline">External links</span></h2> 
+      <ul> 
+       <li><a href="68b3bd0b6988e034b4051535665fada6.html" class="external text" title="http://www.netlib.org/lapack/" rel="nofollow">LAPACK</a> is a collection of FORTRAN subroutines for solving dense linear algebra problems</li> 
+       <li><a href="ffaed7e01ee93bf74843f372a57bc9e9.html" class="external text" title="http://www.alglib.net/" rel="nofollow">ALGLIB</a> includes a partial port of the LAPACK to C++, C#, Delphi, etc.</li> 
+       <li><a href="f4863b544d39b77e4260ed382bc72aae.html" class="external text" title="http://www.bluebit.gr/matrix-calculator/" rel="nofollow">Online Matrix Calculator</a> performs LU decomposition</li> 
+       <li><a href="fa4bde3e00a7f6b95edfe7504cfa5ea3.html" class="external text" title="http://numericalmethods.eng.usf.edu/mws/gen/04sle/mws_gen_sle_txt_ludecomp.doc" rel="nofollow">LU decomposition</a> at <i>Holistic Numerical Methods Institute</i></li> 
+       <li><a href="ec15aa115d21388d085b972919f2d3dc.html" class="external text" title="http://math.fullerton.edu/mathews/n2003/LUFactorMod.html" rel="nofollow">Module for LU Factorization with Pivoting</a></li> 
+       <li><a href="d96d40bd93956020c4b0ee301685dcb1.html" class="external text" title="http://demonstrations.wolfram.com/LUDecomposition/" rel="nofollow">LU Decomposition</a> by <a href="cb5e1e53e646a7d241a672f8c5cf639a.html" title="Ed Pegg, Jr.">Ed Pegg, Jr.</a>, <a href="7bbd535720e7d372c6bc53bf2d5391f6.html" class="mw-redirect" title="The Wolfram Demonstrations Project">The Wolfram Demonstrations Project</a>, 2007.</li> 
+      </ul> 
+      <!-- 
+NewPP limit report
+Preprocessor node count: 2579/1000000
+Post-expand include size: 13716/2048000 bytes
+Template argument size: 2901/2048000 bytes
+Expensive parser function count: 0/500
+--> 
+      <div class="printfooter"> 
+      </div> 
+      <div id="catlinks">
+       <div id="catlinks" class="catlinks">
+        <div id="mw-normal-catlinks">
+         <a href="ef207ddca1ab23fe404d21b095e00d2d.html" title="Special:Categories">Categories</a>: 
+         <span dir="ltr"><a href="96d9be9a93adbbd08bee29e90bf61266.html" title="Category:Numerical linear algebra">Numerical linear algebra</a></span>
+        </div>
+       </div>
+      </div> 
+      <!-- end content --> 
+      <div class="visualClear"></div> 
+     </div> 
+    </div> 
+   </div> 
+   <div id="column-one"> 
+    <div id="p-cactions" class="portlet"> 
+     <h5>Views</h5> 
+     <ul> 
+      <li id="ca-nstab-main" class="selected"><a href="9ef09a05a1e6908a55f556f20817f8e8.html">Article</a></li>
+      <li id="ca-talk"><a href="9a595baf3683b509a5ec2fb05a6fcbb4.html">Discussion</a></li>
+      <li id="ca-current"><a href="94f765ef6869b530fa90d025367c4276.html">Current revision</a></li> 
+     </ul> 
+    </div> 
+    <div class="portlet" id="p-logo"> 
+     <a style="background-image: url(../../../../misc/Wiki.png);" href="9df39e67d8b8ed02a2efbd10b33c3f3c.html" title="Main Page"></a> 
+    </div> 
+    <script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script> 
+    <div class="portlet" id="p-navigation"> 
+     <h5>Navigation</h5> 
+     <div class="pBody"> 
+      <ul> 
+       <li id="n-mainpage"><a href="750dc70d859a9e931f807247d6dad27d.html">Main Page</a></li> 
+       <li id="n-Contents"><a href="3c2509393580c750c9df0a885cc96d8a.html">Contents</a></li> 
+       <li id="n-featuredcontent"><a href="e9e3d1cf84897c778a7528537dd243b1.html">Featured content</a></li> 
+       <li id="n-currentevents"><a href="36cb31fc6a753b5ccef8c5e96cfd752d.html">Current events</a></li> 
+      </ul> 
+     </div> 
+    </div> 
+    <div class="portlet" id="p-interaction"> 
+     <h5>Interaction</h5> 
+     <div class="pBody"> 
+      <ul> 
+       <li id="n-aboutsite"><a href="fc87c06a9ae086d7dd8e5f3baedd7bd7.html">About Wikipedia</a></li> 
+       <li id="n-portal"><a href="32484c16000fa6a0e223f7b69749ffc9.html">Community portal</a></li> 
+       <li id="n-recentchanges"><a href="727d1ed55fd0361d79c62f3117407b85.html">Recent changes</a></li> 
+       <li id="n-contact"><a href="704d2972d62c3670146cabb8187df546.html">Contact Wikipedia</a></li> 
+       <li id="n-sitesupport"><a href="7697783a9041e306f2007b07d8d637f7.html">Donate to Wikipedia</a></li> 
+       <li id="n-help"><a href="8ce777b2ba3e4b83d680c5f823f3cfe1.html">Help</a></li> 
+      </ul> 
+     </div> 
+    </div> 
+    <div id="p-search" class="portlet"> 
+     <h5><label for="searchInput">Search</label></h5> 
+     <div id="searchBody" class="pBody"> 
+      <form action="javascript:goToStatic(3)" id="searchform">
+       <div> 
+        <input id="searchInput" name="search" type="text" accesskey="f" value=""> 
+        <input type="submit" name="go" class="searchButton" id="searchGoButton" value="Go"> 
+       </div>
+      </form> 
+     </div> 
+    </div> 
+    <div id="p-lang" class="portlet"> 
+     <h5>Languages</h5> 
+     <div class="pBody"> 
+      <ul> 
+       <li> <a href="187bb9a3f0005c29f3d253cf4e083154.html">Deutsch</a> </li> 
+       <li> <a href="354cd3c050c09192f084f1291bd3c463.html">Español</a> </li> 
+       <li> <a href="e11ecfbc5d33b2dc98a3a13a75c19d04.html">Français</a> </li> 
+       <li> <a href="b40152d315fd6cc680486be2030cba26.html">Íslenska</a> </li> 
+       <li> <a href="e5ae80caf32fe8940a8238a5c023834d.html">Italiano</a> </li> 
+       <li> <a href="64ca4b869b385fc82908ff5f526700b4.html">Nederlands</a> </li> 
+       <li> <a href="27e5408939a2eccfe53b7c7a14f9ec31.html">日本語</a> </li> 
+       <li> <a href="287ae31e2abd2ab9384979060bb6fb6b.html">Polski</a> </li> 
+       <li> <a href="e4e1744fa99eb1743164c5c05fb949f0.html">Suomi</a> </li> 
+       <li> <a href="41d09e1c7b0a6aceb34934cf06dfa3a9.html">Svenska</a> </li> 
+       <li> <a href="871b3071f35e61514d572d2b69f30fd0.html">Русский</a> </li> 
+      </ul> 
+     </div> 
+    </div> 
+   </div>
+   <!-- end of the left (by default at least) column --> 
+   <div class="visualClear"></div> 
+   <div id="footer"> 
+    <div id="f-poweredbyico">
+     <a href="8813fd1bb327ed7e580153f7e23fcc97.html"><img src="../../../../skins/common/images/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki"></a>
+    </div> 
+    <div id="f-copyrightico">
+     <a href="268c5641465966534f2ad407d495ad4b.html"><img src="../../../../misc/wikimedia-button.png" border="0" alt="Wikimedia Foundation"></a>
+    </div> 
+    <ul id="f-list"> 
+     <li id="f-credits">This page was last modified 14:11, 2 June 2008 by Wikipedia user <a href="598ef91bb6392e984fad151154b36bad.html" title="User:Pdbailey">Pdbailey</a>. Based on work by Wikipedia user(s) <a href="e279a45a96b59e4dd9b37604bcdcaf6f.html" title="User:Silly rabbit">Silly rabbit</a>, <a href="bfd9e023c8349a39536f39716f87d1f4.html" title="User:Rinconsoleao">Rinconsoleao</a>, <a href="41edcd1f0f619bd2db4e964799a578ff.html" title="User:CmdrObot">CmdrObot</a>, <a href="f068c04796d840ac6f94081b90899a93.html" title="User:Pleasantville">Pleasantville</a>, <a href="bd8aec6a397bf1b1229a3b0f0e25f12e.html" title="User:GromXXVII">GromXXVII</a>, <a href="29c0aad51f6e478cce5224a75258dcc4.html" title="User:Jitse Niesen">Jitse Niesen</a>, <a href="d00065fbe1c7d1a6ba0e9366076f0f99.html" title="User:Luc4">Luc4</a>, <a href="4cb443a64c3ea14b13d9ef3f9ab53eed.html" title="User:Giftlite">Giftlite</a>, <a href="9b1a15861218890422b27ce728d1453d.html" title="User:Paul August">Paul August</a>, Rhanekom, <a href="9135b373a684152a02650df66c9d25ec.html" title="User:Mashiah Davidson">Mashiah Davidson</a>, <a href="845afea6174645a5c55b378010a2dc26.html" title="User:Oleg Alexandrov">Oleg Alexandrov</a>, Kawautar, XMxWx, Jftaylor21, K.menin, <a href="4b7a64c48adfee5b5239374adc404d30.html" title="User:Michael Kinyon">Michael Kinyon</a>, <a href="37b48dc7244a06a11f6c81f1cd1a5282.html" title="User:RJFJR">RJFJR</a>, <a href="cb7523eb8c3455f1494dbc34c0748f5d.html" title="User:Tangotango">Tangotango</a>, <a href="f2643a9a6f21eb4cfa9fabf03d9c28b3.html" title="User:Xy7">Xy7</a>, Radhersteller, <a href="6ae60de0262a2deeef51746ee4a646bf.html" title="User:Lebha">Lebha</a>, <a href="9daa422ce7c20c29cf7647c21487c4dd.html" title="User:MathMartin">MathMartin</a>, <a href="ba7386192ec1d9acfb3bbbf9aeb63749.html" title="User:Notinasnaid">Notinasnaid</a>, ThePianoGuy, <a href="a9ecf8112a2f42b96399ec96ecb5f229.html" title="User:YurikBot">YurikBot</a>, <a href="f7ec0985cd05ca848179166b2a7bec53.html" title="User:Bluebot">Bluebot</a>, <a href="f6a6fcce28095a6c216569cb8a178085.html" title="User:Adrecaled">Adrecaled</a>, <a href="cd383dbb9951699a30057be92361bb12.html" title="User:Gauge">Gauge</a>, <a href="3bb278d8f18587c7f622e8348b1630d6.html" title="User:Connelly">Connelly</a>, <a href="3430c33efbb4daca9f77cc2b89a54ae8.html" title="User:BenKovitz">BenKovitz</a>, <a href="16ac7068ea92f581db3caf4a2471e277.html" title="User:Orderud">Orderud</a>, <a href="fe6f0b85760aa8d1275e39081da513da.html" title="User:RobotE">RobotE</a>, Eli Osherovich, Eliosh, <a href="6fd10d05a564bc0eeb816389cfa575fe.html" title="User:RexNL">RexNL</a>, <a href="752bb6b4065ab1e0ae384795b465513f.html" title="User:Kotasik">Kotasik</a>, <a href="c5a895a1a7bd1b0d6072a9c932940a94.html" title="User:Elwikipedista">Elwikipedista</a>, <a href="5bfe93c472c275248715887a9e738ee9.html" title="User:Emperorbma">Emperorbma</a>, <a href="b5df18fae178faa20d3dec7ff92d7886.html" title="User:Pouya">Pouya</a>, <a href="a53e3d3af3957dbb8f69d3670536c591.html" title="User:Olegalexandrov">Olegalexandrov</a>, <a href="1071deda5d83c1349cf0941a765b541e.html" title="User:Tom harrison">Tom harrison</a>, <a href="b76d2d478e88c0b7ab5f666598e23bc1.html" title="User:Sam Hocevar">Sam Hocevar</a>, <a href="c76ebca7d08646a05d59a66a8ce79f07.html" title="User:Dysprosia">Dysprosia</a>, <a href="fb9289eeed6b32ed7ba1b68008e7df80.html" title="User:Lockeownzj00">Lockeownzj00</a>, <a href="23a5d5121fcfe2afd129b6cc32b3b422.html" title="User:Sjorford">Sjorford</a>, <a href="8254ce7cd564fe334a82bb68c30a4196.html" title="User:Charles Matthews">Charles Matthews</a>, <a href="68ad3c693b6bbeea7ce2bb2c3c55b114.html" title="User:Minesweeper">Minesweeper</a>, <a href="7321fc7efc2dc2d748d8d5b50827eeef.html" title="User:Poor Yorick">Poor Yorick</a>, <a href="b452f3207f1216783dd96763360b91ec.html" title="User:Jurgen">Jurgen</a> and <a href="0a19efcbd275722d3ad1152d06ee2aa6.html" title="User:AxelBoldt">AxelBoldt</a> and Anonymous user(s) of Wikipedia.</li> 
+     <li id="f-copyright">All text is available under the terms of the <a class="internal" href="405c8080ab282824402ac91e6a07e339.html" title="Wikipedia:Text of the GNU Free Documentation License">GNU Free Documentation License</a>. (See <b><a class="internal" href="418439fda181cfc5889084ff416e6de4.html" title="Wikipedia:Copyrights">Copyrights</a></b> for details.) <br> Wikipedia® is a registered trademark of the <a href="47f1723ea2c4eb01f0c759cef74893cb.html">Wikimedia Foundation, Inc</a>., a U.S. registered <a class="internal" href="ad849ef5afb7c5999e8db214ce422698.html" title="501(c)(3)">501(c)(3)</a> <a href="d213dd65831f26cff9638e5b08ea02d0.html">tax-deductible</a> <a class="internal" href="3f925dc2d9e6502d8c342d378f99dae0.html" title="Non-profit organization">nonprofit</a> <a href="a099cd3755cad9776ad7e7688aefc500.html" title="Charitable organization">charity</a>.<br></li> 
+     <li id="f-about"><a href="382ea8d5fe6342a7181773c010d9030b.html" title="Wikipedia:About">About Wikipedia</a></li> 
+     <li id="f-disclaimer"><a href="ed1c07568ea1bccc88ea39aa28d0afc0.html" title="Wikipedia:General disclaimer">Disclaimers</a></li> 
+    </ul> 
+   </div> 
+  </div>   
+ </body>
+</html>

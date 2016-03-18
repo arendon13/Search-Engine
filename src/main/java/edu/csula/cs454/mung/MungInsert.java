@@ -18,8 +18,8 @@ public class MungInsert {
 		
 		//String path = 
 		System.out.println("mung");
-		String path = "";
-		String baseUrl = "";
+		String path = "munged";
+		String baseUrl = "http://localhost:3000";
 		File dataset = new File(path);
 		MongoClient mongo = new MongoClient();
 		Morphia morphia = new Morphia();

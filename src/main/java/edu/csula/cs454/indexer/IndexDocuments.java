@@ -14,10 +14,7 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by esauceda on 2/26/16.
@@ -36,10 +33,12 @@ public class IndexDocuments {
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
         ClarifaiClient clarifai = new ClarifaiClient(APP_ID, APP_SECRET);
         HashSet<String> files = new HashSet<String>();
+        HashSet<String> terms = new HashSet<String>();
         int counter = 0;
         int size = documents.asList().size();
 
         for (DocumentMetadata doc : documents){
+            ArrayList<Index> indexes = new ArrayList<Index>();
             //Image recognition
             ranker.addDocument(doc);
 //            if (doc.getContent().length == 0 && !files.contains(doc.getURL())){
@@ -60,19 +59,22 @@ public class IndexDocuments {
 //                    }
 //            }
             for (String term : doc.getContent()) {
-                if (!termExistsInIndex(ds, term, doc.getID())) {
+                if (!termExistsInIndex(ds, term, doc.getID(), terms, indexes)) {
                     Map<ObjectId, Integer> locations = new HashMap<ObjectId, Integer>();
                     locations.put(doc.getID(), 1);
                     Index newTerm = new Index();
                     newTerm.setTerm(term);
                     newTerm.setLocations(locations);
-                    ds.save(newTerm);
+                    terms.add(term);
+                    indexes.add(newTerm);
                 }
             }
+
             counter++;
             if (counter % 10 == 0){
                 System.out.println("Processed " + counter + " Documents out of " + size);
             }
+            ds.save(indexes);
         }
         System.out.println("Done indexing");
         System.out.println("Let the ranking begin!!!!");
@@ -88,19 +90,24 @@ public class IndexDocuments {
     /**
      * Checks to see if a term exists in the Index. If it does, then just append a location to that term document. Save
      * document to collection.
-     * @param ds: The datastore we are saving to. In our case, it is "CrawledData".
-     * @param term: The term we are searching for.
-     * @param location: An ObjectId referencing the document that the term was found in.
+     * @param ds : The datastore we are saving to. In our case, it is "CrawledData".
+     * @param term : The term we are searching for.
+     * @param location : An ObjectId referencing the document that the term was found in.
+     * @param indexes
      * @return Boolean; True if the term exists, otherwise False.
      */
-    public static boolean termExistsInIndex(Datastore ds, String term, ObjectId location){
+    public static boolean termExistsInIndex(Datastore ds, String term, ObjectId location, HashSet<String> terms, ArrayList<Index> indexes){
         boolean existence = false;
-        Query<Index> query = ds.find(Index.class, "term ==", term);
-        if (query.asList().size() > 0){
+
+        if (terms.contains(term)){
+            ds.save(indexes);
+            indexes.clear();
             existence = true;
+            Query<Index> query = ds.find(Index.class, "term ==", term);
             Index index = query.asList().get(0);
             index.addLocation(location);
             ds.save(index);
+            terms.add(term);
         }
         return existence;
     }
