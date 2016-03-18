@@ -77,7 +77,7 @@ public class WebDocument {
 		return dirtyUrl;
 	}
 	
-	private String[] extractMeaningfulContent(String content){
+	public static String[] extractMeaningfulContent(String content){
 		
 		  Tokenizer tokenizer = new StandardTokenizer(Version.LUCENE_36, new StringReader(content));
 		  CharArraySet stopSet = CharArraySet.copy(Version.LUCENE_36, StopAnalyzer.ENGLISH_STOP_WORDS_SET);
@@ -109,7 +109,7 @@ public class WebDocument {
 		//return content.split(" ");
 	}
 		
-	private boolean isLikelyAWord(String word){
+	private static boolean isLikelyAWord(String word){
 		int length = word.length();
 		if(length == 1)return false;
 		for(int i = 0; i  < length; i++)

@@ -40,6 +40,14 @@ task index(type: JavaExec) {
     }
 }
 
+task  mung_insert(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'edu.csula.cs454.mung.MungInsert'
+    if (project.hasProperty("arguments")) {
+        args arguments.split(",")
+    }
+}
+
 task crawl(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'edu.csula.cs454.crawler.CrawlerApp'
