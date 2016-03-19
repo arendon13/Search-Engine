@@ -26,6 +26,7 @@ public class DocumentMetadata {
 		this.idInt = idInt;
 		this.rank = rank;
 		this.url = url;
+		this.ext = "";
 	}
 	
 	public int getIdInt() {

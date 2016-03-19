@@ -16,57 +16,57 @@ import org.jsoup.select.Elements;
 import edu.csula.cs454.crawler.DocumentMetadata;
 
 public class ToastRanker {
-	
+
 	HashMap <String, HashSet<String>> outgoing;
 	HashMap <String, HashSet<String>> incoming;
 	HashMap <String, Double> allRanks;
 	HashMap <String, DocumentMetadata> allDocuments;
 	//double maxRank = 0;
-	
+
 	public ToastRanker(){
 		outgoing = new HashMap<String, HashSet<String>>();
 		incoming = new HashMap<String, HashSet<String>>();
 		allRanks = new HashMap<String,Double>();
 		allDocuments = new HashMap <String, DocumentMetadata>();
 	}
-	
+
 	public void addDocument(DocumentMetadata doc) {
-		
-			String linkId = doc.getURL();
-			allRanks.put(linkId, new Double(doc.getRank()));
-			allDocuments.put(linkId, doc);
-			//calculate the outgoing links of this page
-			HashSet<String> outLinks = new HashSet<String>();
-			outgoing.put(linkId, outLinks);
-			if(doc.isHtml())
-			{
-				try{
-					File input = new File(doc.getPath());
-					Document currentDocument = Jsoup.parse(input, "UTF-8",doc.getURL());
-					Elements linkElements = currentDocument.select("a");
-					for(int i = 0, length = linkElements.size(); i < length; i++)
-					{
-						String link = linkElements.get(i).absUrl("href").toLowerCase().trim();
-						if(link.length() == 0)continue;
-						//System.out.println("Link Added : "+link);
-						outLinks.add(link);
-					}
-					
-				}catch(Exception e){
-					e.printStackTrace();
-				}			
-			}
-			//for each link use as a key and store this documents key 
-			for(String link: outLinks)
-			{
-				HashSet<String> inLinks  = incoming.get(link);
-				if(inLinks == null)
+
+		String linkId = doc.getURL();
+		allRanks.put(linkId, new Double(doc.getRank()));
+		allDocuments.put(linkId, doc);
+		//calculate the outgoing links of this page
+		HashSet<String> outLinks = new HashSet<String>();
+		outgoing.put(linkId, outLinks);
+		if(doc.isHtml())
+		{
+			try{
+				File input = new File(doc.getPath());
+				Document currentDocument = Jsoup.parse(input, "UTF-8",doc.getURL());
+				Elements linkElements = currentDocument.select("a");
+				for(int i = 0, length = linkElements.size(); i < length; i++)
 				{
-					inLinks =new HashSet<String>();
-					incoming.put(link, inLinks);
+					String link = linkElements.get(i).absUrl("href").toLowerCase().trim();
+					if(link.length() == 0)continue;
+					//System.out.println("Link Added : "+link);
+					outLinks.add(link);
 				}
-				inLinks.add(linkId);
+
+			}catch(Exception e){
+				e.printStackTrace();
 			}
+		}
+		//for each link use as a key and store this documents key
+		for(String link: outLinks)
+		{
+			HashSet<String> inLinks  = incoming.get(link);
+			if(inLinks == null)
+			{
+				inLinks =new HashSet<String>();
+				incoming.put(link, inLinks);
+			}
+			inLinks.add(linkId);
+		}
 	}
 
 	public DocumentMetadata[] rankDocumentsUsingSecretToastMethod() {
@@ -136,8 +136,8 @@ public class ToastRanker {
 			//doc.setRank(initRank);
 			allRanks.put(d.getKey(),new Double(initRank));
 			//d.getValue().setRank(initRank);
-			
-		}		
+
+		}
 		rankAllDocs();
 		//return that documents as an array so they can be saved to the database 
 		int size = allDocuments.size();
@@ -150,23 +150,29 @@ public class ToastRanker {
 		}
 		return array;
 	}
-	
-	
+
+
 	public void rankAllDocs(){
 		boolean notDoneRanking = true;
 		//rank documents
 		int counter = 0;
-	
-		while(counter < 3)
-		{
+		//clone initial ranks 
+		HashMap <String, Double>previousRank;
+		//while(!isDone())
+		do{
+			previousRank = (HashMap<String, Double>) allRanks.clone();
 			for(Entry<String,DocumentMetadata> d: allDocuments.entrySet())
 			{
 				DocumentMetadata doc = d.getValue(); 
 				/*if(doc.isHtml())*/rankDoc(doc);
 			}
 			counter++;
-		}
-		
+			if (counter % 100 == 0){
+				System.out.println("Iteration: " + counter);
+				System.out.println(previousRank.values().toArray()[0]);
+			}
+		}while(!isDone(previousRank));
+
 		//copy new ranks into documents
 		for(Entry<String,DocumentMetadata> d: allDocuments.entrySet())
 		{
@@ -174,12 +180,30 @@ public class ToastRanker {
 			doc.setRank(allRanks.get(d.getKey()).doubleValue());
 		}
 	}
-	
+
+	public boolean isDone(HashMap<String, Double> prevRanks){
+
+		//TODO calculate an appropriate range
+		double range  = .00001;
+		for(Entry<String,Double> d: allRanks.entrySet())
+		{
+			String key = d.getKey();
+			double newVal = allRanks.get(key).doubleValue();
+			double oldVal = prevRanks.get(key).doubleValue();
+			if(newVal <= oldVal+range && newVal >= oldVal-range)return false;
+			//if(.equals(prevRanks.get(key)))return false;
+		}
+
+		return true;
+	}
+
+
+
 	public void rankDoc(DocumentMetadata doc){
 		String url  = doc.getURL();
-		allRanks.put(url,getRank(url));		
+		allRanks.put(url,getRank(url));
 	}
-	
+
 	public Double getRank(String url){
 		HashSet<String> linksToThisURL = incoming.get(url);
 		//HashSet<String> linksFromThisURL = outgoing.get(url);
@@ -201,13 +225,13 @@ public class ToastRanker {
 			newRank+= (currentRank.doubleValue()/linksFromURL.size());
 			//System.out.print("Calculating New Rank");
 		}
-		
+
 		if(newRank == 0.0)return allRanks.get(url);
 		else{
 			//check against max
 			//if(newRank > maxRank)maxRank = newRank;
 		}
-		 	
+
 		return new Double(newRank);
 	}
 	

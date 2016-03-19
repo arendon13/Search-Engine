@@ -54,9 +54,9 @@ module.exports = function(app){
 									var totalTerms = Object.keys(location['content']).length;
 									var termNum = results['locations'][id];
 									var tf = Math.log(1 + (termNum / totalTerms));
-									var idf = Math.log10(1150 / length);
+									var idf = Math.log10(1150 / length); 
 									var tfidf = tf * idf;
-									data.push({ url: location['url'], rank: ((tfidf + location['rank']) / 2), td_idf: tfidf, raw_rank: location['rank']});
+									data.push({ url: location['url'], rank: ((tfidf * 0.1) + (location['rank'] * 0.9)), td_idf: tfidf, raw_rank: location['rank']});
 									resolve();
 								})
 						})
