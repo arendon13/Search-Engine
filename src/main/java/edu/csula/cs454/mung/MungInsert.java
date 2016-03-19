@@ -11,6 +11,7 @@ import com.mongodb.MongoClient;
 
 import edu.csula.cs454.crawler.DocumentMetadata;
 import edu.csula.cs454.crawler.WebDocument;
+import edu.csula.cs454.indexer.Index;
 
 public class MungInsert {
 	
@@ -25,6 +26,7 @@ public class MungInsert {
 		Morphia morphia = new Morphia();
 		morphia.map(DocumentMetadata.class);
 		Datastore dataStore = morphia.createDatastore(mongo, "CrawledData");
+		dataStore.delete(dataStore.createQuery(DocumentMetadata.class));
 		File[] allFiles = dataset.listFiles();
 		for(File file: allFiles)
 		{

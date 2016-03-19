@@ -25,13 +25,13 @@ public class IndexDocuments {
         morphia.map(Index.class);
         morphia.map(DocumentMetadata.class);        
         final Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
-        String APP_ID = args[0];
-        String APP_SECRET = args[1];
+        //String APP_ID = args[0];
+        //String APP_SECRET = args[1];
         ds.delete(ds.createQuery(Index.class));
         ds.delete(ds.createQuery(ImgIndex.class));
         ToastRanker ranker = new ToastRanker();
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
-        ClarifaiClient clarifai = new ClarifaiClient(APP_ID, APP_SECRET);
+        //ClarifaiClient clarifai = new ClarifaiClient(APP_ID, APP_SECRET);
         HashSet<String> files = new HashSet<String>();
         HashSet<String> terms = new HashSet<String>();
         int counter = 0;
