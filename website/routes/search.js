@@ -22,7 +22,7 @@ module.exports = function(app){
 										path: 'images/' + raw_path,
 										prob: results['locations'][id],
 										ext: location['ext'],
-										url: location['url'],
+										url: location['url']
 								 	});
 									resolve();
 								})

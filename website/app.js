@@ -23,7 +23,7 @@ MongoClient.connect(url, function(err, database) {
 	app.set('mongo', database);
 	require('./routes')(app);
 
-	app.listen(8080, function(){
+	app.listen(3000, function(){
 		console.log('Listening on port 3000');
 	});
 
