@@ -5,6 +5,7 @@ import com.clarifai.api.RecognitionRequest;
 import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
 import com.mongodb.MongoClient;
+import com.mongodb.WriteConcern;
 import edu.csula.cs454.crawler.DocumentMetadata;
 import edu.csula.cs454.ranker.ToastRanker;
 
@@ -25,6 +26,7 @@ public class IndexDocuments {
         morphia.map(Index.class);
         morphia.map(DocumentMetadata.class);        
         final Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
+        morphia.setUseBulkWriteOperations(true);
         String APP_ID = args[0];
         String APP_SECRET = args[1];
         ds.delete(ds.createQuery(Index.class));
@@ -32,13 +34,13 @@ public class IndexDocuments {
         ToastRanker ranker = new ToastRanker();
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
         ClarifaiClient clarifai = new ClarifaiClient(APP_ID, APP_SECRET);
-        HashSet<String> files = new HashSet<String>();
-        HashSet<String> terms = new HashSet<String>();
         int counter = 0;
         int size = documents.asList().size();
+        HashMap<String, Index> indexMap = new HashMap<String, Index>();
+        HashMap<String, ImgIndex> imgIndexMap = new HashMap<String, ImgIndex>();
 
         for (DocumentMetadata doc : documents){
-            ArrayList<Index> indexes = new ArrayList<Index>();
+
             //Image recognition
             ranker.addDocument(doc);
 //            if (doc.getContent().length == 0 && !files.contains(doc.getURL())){
@@ -59,23 +61,61 @@ public class IndexDocuments {
 //                    }
 //            }
             for (String term : doc.getContent()) {
-                if (!termExistsInIndex(ds, term, doc.getID(), terms, indexes)) {
-                    Map<ObjectId, Integer> locations = new HashMap<ObjectId, Integer>();
-                    locations.put(doc.getID(), 1);
-                    Index newTerm = new Index();
-                    newTerm.setTerm(term);
-                    newTerm.setLocations(locations);
-                    terms.add(term);
-                    indexes.add(newTerm);
-                }
+                //if term has more than 10 locations, add it to the masterIndexList
+                    Index mappedIndex = indexMap.get(term);
+                    if (mappedIndex == null){
+                        //check to make sure index is not in db
+                        Query<Index> query = ds.find(Index.class, "term ==", term);
+                        if (query.asList().size() > 0){
+                            //use this index, add location, add to hashmap
+                            Index queriedIndex = query.asList().get(0);
+                            queriedIndex.addLocation(doc.getID());
+                            indexMap.put(term, queriedIndex);
+                        } else {
+                            Map<ObjectId, Integer> locations = new HashMap<ObjectId, Integer>();
+                            locations.put(doc.getID(), 1);
+                            Index newIndex = new Index();
+                            newIndex.setTerm(term);
+                            newIndex.setLocations(locations);
+                            indexMap.put(term, newIndex);
+                            //create new index + location, add to hashmap
+                        }
+                    } else {
+                        mappedIndex.addLocation(doc.getID());
+                        //use this index, add location, save to hashmap
+                    }
+                //Check to make sure term hasn't been found in document yet
+                //if term hasn't been found:
+                //check to make sure it isn't in the db
+                //if it isn't in the db, new index + term in hashmap
+                //else: find index + term in hashmap
+                //else: add location to index in hashmap
+                //once done, insert to db
+//                if (!termExistsInIndex(ds, term, doc.getID(), terms, indexes)) {
+//                    Map<ObjectId, Integer> locations = new HashMap<ObjectId, Integer>();
+//                    locations.put(doc.getID(), 1);
+//                    Index newTerm = new Index();
+//                    newTerm.setTerm(term);
+//                    newTerm.setLocations(locations);
+//                    terms.add(term);
+//                    indexes.add(newTerm);
+//                }
             }
 
             counter++;
-            if (counter % 10 == 0){
-                System.out.println("Processed " + counter + " Documents out of " + size);
+            if (counter % 100 == 0) {
+                System.out.println(counter);
             }
-            ds.save(indexes);
+//            if (counter % 1000 == 0){
+//                System.out.println("Processed " + counter + " Documents out of " + size);
+//                ds.save(indexMap.values(), WriteConcern.UNACKNOWLEDGED);
+//                System.out.println("Saved");
+//                indexMap.clear();
+//                System.out.println("Cleared");
+//            }
+
         }
+        ds.save(indexMap.values());
         System.out.println("Done indexing");
         System.out.println("Let the ranking begin!!!!");
         DocumentMetadata[] rankedDocs = ranker.rankDocumentsUsingSecretToastMethod();
@@ -83,33 +123,9 @@ public class IndexDocuments {
         {
         	ds.save(d);
         }
+        System.out.println();
         System.out.print("Ranking is complete!!");
         //calculateTfIdf(ds, totalDocs);
-    }
-
-    /**
-     * Checks to see if a term exists in the Index. If it does, then just append a location to that term document. Save
-     * document to collection.
-     * @param ds : The datastore we are saving to. In our case, it is "CrawledData".
-     * @param term : The term we are searching for.
-     * @param location : An ObjectId referencing the document that the term was found in.
-     * @param indexes
-     * @return Boolean; True if the term exists, otherwise False.
-     */
-    public static boolean termExistsInIndex(Datastore ds, String term, ObjectId location, HashSet<String> terms, ArrayList<Index> indexes){
-        boolean existence = false;
-
-        if (terms.contains(term)){
-            ds.save(indexes);
-            indexes.clear();
-            existence = true;
-            Query<Index> query = ds.find(Index.class, "term ==", term);
-            Index index = query.asList().get(0);
-            index.addLocation(location);
-            ds.save(index);
-            terms.add(term);
-        }
-        return existence;
     }
 
     /**

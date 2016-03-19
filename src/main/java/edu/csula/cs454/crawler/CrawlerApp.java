@@ -5,7 +5,7 @@ public class CrawlerApp {
 		 //String seed = "http://www.calstatela.edu/";
 		 //String seed = "http://maplestory.nexon.net/";
 		 //-d <depth> -u <url> -e
-		 args = new String[]{"-d","1","-u","http://localhost:3000/","-e","1"};
+		 args = new String[]{"-d","1","-u","http://ocean.pcwerk.com/data/index.html","-e","1"};
 		 if(args.length > 3 && args[0] == "-d" && args[2] == "-u")
 		 {
 			 String seed = args[3];

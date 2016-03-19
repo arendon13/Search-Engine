@@ -126,7 +126,7 @@ public class RankTest {
 		    for(int i = 0; i < value.toArray().length; i++){
 		    	hset = new HashSet<Integer>();
 		    	hset.add(key);
-		    	int curValue = (int) value.toArray()[i];
+		    	int curValue = (Integer) value.toArray()[i];
 		    	if(linksToMe.keySet().contains(curValue)){
 					linksToMe.get(curValue).add(key);
 				}

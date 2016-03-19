@@ -1,11 +1,18 @@
 apply plugin: 'java'
-apply plugin: 'eclipse'
 
 sourceCompatibility = 1.8
 version = '1.0'
 
 repositories {
     mavenCentral()
+}
+
+compileJava {
+//raise heap
+    options.fork = "true"
+    options.forkOptions.with {
+        memoryMaximumSize = "5120m"
+    }
 }
 
 dependencies {
@@ -54,5 +61,17 @@ task crawl(type: JavaExec) {
       // simple defensive programming to define optional arguments
     if (project.hasProperty("arguments")) {
         args arguments.split(" ")
+    }
+}
+sourceSets.main.java.srcDirs = ['src']
+
+
+// util.jar
+task indexJar(type: Jar) {
+    from(sourceSets.main.output) {
+        include "/main/java/edu/csula/cs454/indexer"
+    }
+    manifest {
+        attributes 'Main-Class': 'edu.csula.cs454.indexer.IndexDocuments'
     }
 }
