@@ -43,23 +43,23 @@ public class IndexDocuments {
 
             //Image recognition
             ranker.addDocument(doc);
-            if (doc.getContent().length == 0 && !files.contains(doc.getURL())){
-                files.add(doc.getURL());
-                File img = new File(doc.getPath());
-                List<RecognitionResult> result = clarifai.recognize(new RecognitionRequest(img));
-                    if (result.get(0).getStatusMessage().equals("OK")){
-                        for (Tag tag : result.get(0).getTags()) {
-                            if (!termExistsInImgIndex(ds, tag.getName(), doc.getID(), tag.getProbability())) {
-                                Map<ObjectId, Double> locations = new HashMap<ObjectId, Double>();
-                                locations.put(doc.getID(), tag.getProbability());
-                                ImgIndex newImg = new ImgIndex();
-                                newImg.setTag(tag.getName());
-                                newImg.setLocations(locations);
-                                ds.save(newImg);
-                            }
-                        }
-                    }
-            }
+//            if (doc.getContent().length == 0 && !files.contains(doc.getURL())){
+//                files.add(doc.getURL());
+//                File img = new File(doc.getPath());
+//                List<RecognitionResult> result = clarifai.recognize(new RecognitionRequest(img));
+//                    if (result.get(0).getStatusMessage().equals("OK")){
+//                        for (Tag tag : result.get(0).getTags()) {
+//                            if (!termExistsInImgIndex(ds, tag.getName(), doc.getID(), tag.getProbability())) {
+//                                Map<ObjectId, Double> locations = new HashMap<ObjectId, Double>();
+//                                locations.put(doc.getID(), tag.getProbability());
+//                                ImgIndex newImg = new ImgIndex();
+//                                newImg.setTag(tag.getName());
+//                                newImg.setLocations(locations);
+//                                ds.save(newImg);
+//                            }
+//                        }
+//                    }
+//            }
             for (String term : doc.getContent()) {
                 //if term has more than 10 locations, add it to the masterIndexList
                     Index mappedIndex = indexMap.get(term);
