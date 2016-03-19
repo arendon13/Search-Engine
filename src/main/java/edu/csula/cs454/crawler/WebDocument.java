@@ -51,7 +51,9 @@ public class WebDocument {
 	private boolean isHtml;
 	private String fileExtesion = null;
 	private String path = "";
-	private static HashSet<String> stopwords = null;
+	//private static HashSet<String> stopwords = null;
+	//private static StandardFilter standardFilter = null;
+	private static CharArraySet stopSet = null;
 
 	public WebDocument(Document doc){
 		//This assumes the document passed in is an html document 
@@ -84,17 +86,18 @@ public class WebDocument {
 	public static String[] extractMeaningfulContent(String content){
 		//TODO this can be optamized 
 		  Tokenizer tokenizer = new StandardTokenizer(Version.LUCENE_36, new StringReader(content));
-		  CharArraySet stopSet = CharArraySet.copy(Version.LUCENE_36, StopAnalyzer.ENGLISH_STOP_WORDS_SET);
+		  //CharArraySet stopSet = CharArraySet.copy(Version.LUCENE_36, StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 		  //TODO: maybe add some
-		  if(stopwords == null){
-			  stopwords = new HashSet<String>();
+		  if(stopSet == null){
+			//  stopwords = new HashSet<String>();
+			  stopSet = CharArraySet.copy(Version.LUCENE_36, StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 			  try{
 				  BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("stopwords.txt")));
 				  String word;
 			      while((word = bufferedReader.readLine()) != null) 
 			      {
-			    	  stopSet.add(word);
-			    	  stopwords.add(word);
+			    	 stopSet.add(word);
+			    	  //stopwords.add(word);
 			      }   
 				  
 				  
@@ -102,11 +105,6 @@ public class WebDocument {
 				  e.printStackTrace();
 			  }
 			  
-		  }else {
-			  for(String word:stopwords)
-			  {
-				  stopSet.add(word);
-			  }			  
 		  }
 		  //stopSet.add("for");
 		  //stopSet.add("the");
@@ -188,6 +186,7 @@ public class WebDocument {
 	public String getExtension(){
 		if(fileExtesion != null)return fileExtesion;
 		fileExtesion = FilenameUtils.getExtension(getUrl());
+		if(fileExtesion == null) fileExtesion ="";
 		//TODO if file extension is empty use tika to resolve;
 		return fileExtesion;
 	}
