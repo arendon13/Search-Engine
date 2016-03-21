@@ -158,8 +158,7 @@ public class ToastRanker {
 		int counter = 0;
 		//clone initial ranks 
 		HashMap <String, Double>previousRank;
-		//while(!isDone())
-		do{
+		while(counter < 3){
 			previousRank = (HashMap<String, Double>) allRanks.clone();
 			for(Entry<String,DocumentMetadata> d: allDocuments.entrySet())
 			{
@@ -171,7 +170,8 @@ public class ToastRanker {
 				System.out.println("Iteration: " + counter);
 				System.out.println(previousRank.values().toArray()[0]);
 			}
-		}while(!isDone(previousRank));
+		}
+//		while(!isDone(previousRank));
 
 		//copy new ranks into documents
 		for(Entry<String,DocumentMetadata> d: allDocuments.entrySet())
