@@ -34,4 +34,8 @@ public class Index {
     public void setLocations(Map<ObjectId, Integer> locations) {
         this.locations = locations;
     }
+
+    public int getLocationCount(){
+        return locations.size();
+    }
 }

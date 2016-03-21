@@ -1,9 +1,12 @@
 package edu.csula.cs454.crawler;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FilterReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -48,6 +51,7 @@ public class WebDocument {
 	private boolean isHtml;
 	private String fileExtesion = null;
 	private String path = "";
+	private static HashSet<String> stopwords = null;
 
 	public WebDocument(Document doc){
 		//This assumes the document passed in is an html document 
@@ -77,13 +81,35 @@ public class WebDocument {
 		return dirtyUrl;
 	}
 	
-	private String[] extractMeaningfulContent(String content){
-		
+	public static String[] extractMeaningfulContent(String content){
+		//TODO this can be optamized 
 		  Tokenizer tokenizer = new StandardTokenizer(Version.LUCENE_36, new StringReader(content));
 		  CharArraySet stopSet = CharArraySet.copy(Version.LUCENE_36, StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 		  //TODO: maybe add some
-		  stopSet.add("for");
-		  stopSet.add("the");
+		  if(stopwords == null){
+			  stopwords = new HashSet<String>();
+			  try{
+				  BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("stopwords.txt")));
+				  String word;
+			      while((word = bufferedReader.readLine()) != null) 
+			      {
+			    	  stopSet.add(word);
+			    	  stopwords.add(word);
+			      }   
+				  
+				  
+			  }catch(Exception e){
+				  e.printStackTrace();
+			  }
+			  
+		  }else {
+			  for(String word:stopwords)
+			  {
+				  stopSet.add(word);
+			  }			  
+		  }
+		  //stopSet.add("for");
+		  //stopSet.add("the");
 		  StandardFilter standardFilter = new StandardFilter(Version.LUCENE_36, tokenizer);
 		  StopFilter stopFilter = new StopFilter(Version.LUCENE_36, standardFilter, stopSet);
 		  CharTermAttribute charTermAttribute = (CharTermAttribute) tokenizer.addAttribute(CharTermAttribute.class);
@@ -109,7 +135,7 @@ public class WebDocument {
 		//return content.split(" ");
 	}
 		
-	private boolean isLikelyAWord(String word){
+	private static boolean isLikelyAWord(String word){
 		int length = word.length();
 		if(length == 1)return false;
 		for(int i = 0; i  < length; i++)
