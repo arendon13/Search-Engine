@@ -82,7 +82,7 @@ public class WebDocument {
 	}
 	
 	public static String[] extractMeaningfulContent(String content){
-		//TODO this can be optamized 
+		//TODO this can be optimized
 		  Tokenizer tokenizer = new StandardTokenizer(Version.LUCENE_36, new StringReader(content));
 		  CharArraySet stopSet = CharArraySet.copy(Version.LUCENE_36, StopAnalyzer.ENGLISH_STOP_WORDS_SET);
 		  //TODO: maybe add some

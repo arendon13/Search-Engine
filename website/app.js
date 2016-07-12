@@ -10,6 +10,7 @@ var Promise = require('bluebird');
 Promise.promisifyAll(MongoClient);
 Promise.promisifyAll(collection.prototype);
 
+//set static directories
 app.use(express.static(__dirname + '/public'));
 app.use('/images', express.static(__dirname + '/../CrawlerStorage'));
 
@@ -19,11 +20,12 @@ MongoClient.connect(url, function(err, database) {
 		console.log('Something went wrong. Is MongoDB running?');
 		throw err;
 	}
-
+	// Set mongo object for use in other parts of the server application.
 	app.set('mongo', database);
 	require('./routes')(app);
 
-	app.listen(8080, function(){
+	// Start Listening
+	app.listen(8080, function(err){
 		console.log('Listening on port 8080');
 	});
 

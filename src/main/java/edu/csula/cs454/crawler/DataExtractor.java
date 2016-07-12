@@ -34,6 +34,7 @@ public class DataExtractor extends Thread implements Runnable {
 			Morphia morphia = new Morphia();
 			morphia.map(DocumentMetadata.class);
 			dataStore = morphia.createDatastore(mongo, database);
+			dataStore.delete(dataStore.createQuery(DocumentMetadata.class));
 		}
 		
 		

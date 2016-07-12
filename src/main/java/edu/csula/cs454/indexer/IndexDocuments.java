@@ -22,32 +22,37 @@ import java.util.*;
  */
 public class IndexDocuments {
     public static void main(String args[]){
+
         final Morphia morphia = new Morphia();
-        morphia.map(Index.class);
-        morphia.map(DocumentMetadata.class);        
         final Datastore ds = morphia.createDatastore(new MongoClient(), "CrawledData");
-        morphia.setUseBulkWriteOperations(true);
+
         String APP_ID = args[0];
         String APP_SECRET = args[1];
+        ClarifaiClient clarifai = new ClarifaiClient(APP_ID, APP_SECRET);
+
+        HashMap<String, Index> indexMap = new HashMap<String, Index>();
+        HashSet<String> files = new HashSet<String>();
+        int counter = 0;
+
+        morphia.map(Index.class);
+        morphia.map(DocumentMetadata.class);
+        morphia.setUseBulkWriteOperations(true);
+
         ds.delete(ds.createQuery(Index.class));
         ds.delete(ds.createQuery(ImgIndex.class));
+
         ToastRanker ranker = new ToastRanker();
         Query<DocumentMetadata> documents = ds.find(DocumentMetadata.class);
-        ClarifaiClient clarifai = new ClarifaiClient(APP_ID, APP_SECRET);
-        int counter = 0;
-        int size = documents.asList().size();
-        HashMap<String, Index> indexMap = new HashMap<String, Index>();
-        HashMap<String, ImgIndex> imgIndexMap = new HashMap<String, ImgIndex>();
-        HashSet<String> files = new HashSet<String>();
 
         for (DocumentMetadata doc : documents){
 
             //Image recognition
             ranker.addDocument(doc);
             if (doc.getContent().length == 0 && !files.contains(doc.getURL())){
-                files.add(doc.getURL());
-                File img = new File(doc.getPath());
-                List<RecognitionResult> result = clarifai.recognize(new RecognitionRequest(img));
+                if (!doc.getPath().contains(".svg")){
+                    files.add(doc.getURL());
+                    File img = new File(doc.getPath());
+                    List<RecognitionResult> result = clarifai.recognize(new RecognitionRequest(img));
                     if (result.get(0).getStatusMessage().equals("OK")){
                         for (Tag tag : result.get(0).getTags()) {
                             if (!termExistsInImgIndex(ds, tag.getName(), doc.getID(), tag.getProbability())) {
@@ -60,7 +65,9 @@ public class IndexDocuments {
                             }
                         }
                     }
+                }
             }
+
             for (String term : doc.getContent()) {
                 //if term has more than 10 locations, add it to the masterIndexList
                     Index mappedIndex = indexMap.get(term);
@@ -85,46 +92,20 @@ public class IndexDocuments {
                         mappedIndex.addLocation(doc.getID());
                         //use this index, add location, save to hashmap
                     }
-                //Check to make sure term hasn't been found in document yet
-                //if term hasn't been found:
-                //check to make sure it isn't in the db
-                //if it isn't in the db, new index + term in hashmap
-                //else: find index + term in hashmap
-                //else: add location to index in hashmap
-                //once done, insert to db
-//                if (!termExistsInIndex(ds, term, doc.getID(), terms, indexes)) {
-//                    Map<ObjectId, Integer> locations = new HashMap<ObjectId, Integer>();
-//                    locations.put(doc.getID(), 1);
-//                    Index newTerm = new Index();
-//                    newTerm.setTerm(term);
-//                    newTerm.setLocations(locations);
-//                    terms.add(term);
-//                    indexes.add(newTerm);
-//                }
             }
 
             counter++;
             if (counter % 100 == 0) {
                 System.out.println(counter);
             }
-//            if (counter % 1000 == 0){
-//                System.out.println("Processed " + counter + " Documents out of " + size);
-//                ds.save(indexMap.values(), WriteConcern.UNACKNOWLEDGED);
-//                System.out.println("Saved");
-//                indexMap.clear();
-//                System.out.println("Cleared");
-//            }
 
         }
         ds.save(indexMap.values());
-        System.out.println("Done indexing");
-        System.out.println("Let the ranking begin!!!!");
+        System.out.println("Done indexing, start ranking.");
         DocumentMetadata[] rankedDocs = ranker.rankDocumentsUsingSecretToastMethod();
         System.out.println("Saving Ranks");
         ds.save(rankedDocs);
-        System.out.println();
         System.out.print("Ranking is complete!!");
-        //calculateTfIdf(ds, totalDocs);
     }
 
     /**

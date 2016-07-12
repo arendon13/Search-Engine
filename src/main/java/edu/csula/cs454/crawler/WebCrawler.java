@@ -52,19 +52,17 @@ public class WebCrawler {
 					childLinks.add(elts.get(j).absUrl("href"));
 				}
 				//add document to list of documents crawled
-				//docs.push(new WebDocument(doc));
 				docs.add(new WebDocument(doc));
-				
-				//TODO get all images on the page 
-//				Elements images = doc.select("img");
-//				System.out.println("Extracting Images...");
-//				for(int j = 0, length = images.size(); j < length; j++)
-//				{
-//					String link = images.get(j).attr("abs:src").trim();
-//					if(link.length() == 0)continue;
-//					//System.out.println("Extracting from: "+link);
-//					crawlNonHtml(link);
-//				}
+
+				Elements images = doc.select("img");
+				System.out.println("Extracting Images...");
+				for(int j = 0, length = images.size(); j < length; j++)
+				{
+					String link = images.get(j).attr("abs:src").trim();
+					if(link.length() == 0)continue;
+					//System.out.println("Extracting from: "+link);
+					crawlNonHtml(link);
+				}
 				
 			} catch (IOException e) {
 				//if its not html or xml what is it
@@ -89,7 +87,7 @@ public class WebCrawler {
 			docs.add(new WebDocument(response));
 			//System.out.println("Documnet Received! ");
 		}catch(Exception er){
-			System.err.println("Document could not be retreived: "+er.getMessage());
+			System.err.println("Document could not be retrieved: "+er.getMessage());
 		}		
 	}
 	

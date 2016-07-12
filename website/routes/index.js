@@ -1,8 +1,8 @@
 var path = require('path');
-
+/**
+ * Our routes for both sides of our search engine, image and text search. 
+ */
 module.exports = function(app){
-
-	var db = app.get('mongo');
 
 	var search = require('./search.js')(app);
 

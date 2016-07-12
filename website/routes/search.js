@@ -1,10 +1,19 @@
 var Promise = require('bluebird');
 var oid = require('mongodb').ObjectID;
-
+/**
+ * Main Search functionality. Both search methods employ similar logic.
+ * High-Level Overview:
+ * 	1. Query db for objects matching search term.
+ * 	2. Sort according to confidence (rank + tf-idf, or tag-confidence)
+ * 	3. Return data once all promises have been resolved
+ */
 module.exports = function(app){
 
 	var db = app.get('mongo');
-
+	/**
+	 * Route for image results.
+	 * Ranked by tag confidence.
+	 */
 	app.get('/search/image', function(req, res) {
 		var data = [];
 		results = db.collection('ImgIndex').findOneAsync({ "tag" : req.query.query.toLowerCase()})
@@ -38,6 +47,10 @@ module.exports = function(app){
 			})
 	});
 
+	/**
+	 * Route for text results.
+	 * Calculates tf-idf at runtime.
+	 */
 	app.get('/search/text', function(req, res) {
 		var data = [];
 		results = db.collection('Index').findOneAsync({ "term" : req.query.query.toLowerCase()})
@@ -73,6 +86,10 @@ module.exports = function(app){
 	})
 }
 
+/**
+ * Text Comparator.
+ * @returns 0, -1, or 1 based on rank comparison.
+ */
 function compareText(a, b){
 	if (a.rank < b.rank){
 		return 1
@@ -82,7 +99,10 @@ function compareText(a, b){
 	}
 	return 0
 }
-
+/**
+ * Image comparator. 
+ * @returns 0, -1, or 1 based on confidence comparison
+ */
 function compareImages(a, b){
 	if (a.prob < b.prob){
 		return 1
